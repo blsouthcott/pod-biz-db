@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import Form from '../components/Form';
-import Table from '../components/Table';
-// import { mockStreamsData } from '../sample_data/streams';
-import { createEntity, getDeleteEntityFn, getEntityData, getEpisodesAsOptions, getSubscribersAsOptions } from '../utils/entityData';
-import * as formConstants from '../constants/form_strings';
-import { backendURL } from '../constants/backendURL';
-import RespModal from '../components/Modal';
-import Accordion from '../components/Accordion';
+import Form from '../Form';
+import Table from '../Table';
+import { createEntity, getDeleteEntityFn, getEntityData, getEpisodesAsOptions, getSubscribersAsOptions } from '../../utils/entityData';
+import * as formConstants from '../../constants/form_strings';
+import { backendURL } from '../../constants/backendURL';
+import RespModal from '../Modal';
+import Accordion from '../Accordion';
 
 
 export default function Streams () {

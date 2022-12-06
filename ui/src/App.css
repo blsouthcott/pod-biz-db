@@ -2,10 +2,15 @@
 
 .App {
     text-align: center;
+    /* background-color: rgb(238,253,236,0.75); */
 }
 
 .link {
     text-decoration: None;
+}
+
+.divider {
+    display: inline-block;
 }
 
 fieldset {

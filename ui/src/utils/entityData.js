@@ -22,14 +22,8 @@ export async function createEntity(entity, entityData) {
         },
     })
     console.log('result of fetch to create new entity: ' + resp.status);
-    // if (resp.status === 201) {
-    //     // alert(`Success! New ${entity.slice(0, entity.length-1)} has been aded to the database!`)
-        
-    // } else {
-    //     // alert(`Unable to create new ${entity.slice(0, entity.length-1)}}. Please try again later.`);
-    // }
     return resp.status;
-}
+};
 
 
 export async function updateEntityData(entity, entityData) {
@@ -42,11 +36,6 @@ export async function updateEntityData(entity, entityData) {
         },
     })
     console.log('result of fetch to update entity: ' + resp.status);
-    // if (resp.status === 200) {
-    //     alert(`Success! New ${entity.slice(0, entity.length-1)} has been updated in the database!`)
-    // } else {
-    //     alert(`Unable to update ${entity.slice(0, entity.length-1)}}. Please try again later.`);
-    // }
     return resp.status;
 }
 

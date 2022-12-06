@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import Table from '../components/Table';
-import Form from '../components/Form';
-// import { mockShowsData } from '../sample_data/shows';
-import { getEntityData, createEntity, getDeleteEntityFn } from '../utils/entityData';
-import * as formConstants from '../constants/form_strings';
-import { backendURL } from '../constants/backendURL';
-import RespModal from '../components/Modal';
-import Accordion from '../components/Accordion';
+import { useSelector, useDispatch } from 'react-redux';
+import Table from '../Table';
+import Form from '../Form';
+import { getEntityData, createEntity, getDeleteEntityFn } from '../../utils/entityData';
+import * as formConstants from '../../constants/form_strings';
+import { backendURL } from '../../constants/backendURL';
+import RespModal from '../Modal';
+import Accordion from '../Accordion';
 
+import { load, selectShows } from '../../store/slices/showsSlice';
 
 export default function Shows () {
+
+    const shows = useSelector(selectShows);
+    const dispatch = useDispatch();
 
     // ****************
     // Load data to be displayed in shows table
@@ -20,7 +24,7 @@ export default function Shows () {
         'Title'
     ]
 
-    const [shows, setShows] = useState([]);
+    // const [shows, setShows] = useState([]);
     const loadShows = async () => {
         // get shows data from mysql database
         let showsData = await getEntityData('shows');

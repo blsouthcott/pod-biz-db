@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import Table from '../components/Table';
-import Form from '../components/Form';
-import { mockProducersData } from '../sample_data/producers';
-import { getDeleteEntityFn, createEntity, getShowsAsOptions, updateEntityData } from '../utils/entityData';
-import * as formConstants from '../constants/form_strings';
-import { getEntityData } from '../utils/entityData';
-import { backendURL } from '../constants/backendURL';
-import RespModal from '../components/Modal';
-import Accordion from '../components/Accordion';
+import Table from '../Table';
+import Form from '../Form';
+import { getDeleteEntityFn, createEntity, getShowsAsOptions, updateEntityData } from '../../utils/entityData';
+import * as formConstants from '../../constants/form_strings';
+import { getEntityData } from '../../utils/entityData';
+import { backendURL } from '../../constants/backendURL';
+import RespModal from '../Modal';
+import Accordion from '../Accordion';
 
 
 export default function Producers () {

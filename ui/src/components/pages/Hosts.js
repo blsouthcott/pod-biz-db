@@ -1,14 +1,13 @@
 
 import React, { useEffect, useState } from 'react';
-import Table from '../components/Table';
-import Form from '../components/Form';
-import { mockHostsData } from '../sample_data/hosts';
-import { createEntity, getDeleteEntityFn, getEntityData, getShowsAsOptions, updateEntityData } from '../utils/entityData';
-import { updateSelectedVals } from '../utils/selectMultiple';
-import * as formConstants from '../constants/form_strings';
-import formatShowIDs from '../utils/displayShowIDs';
-import RespModal from '../components/Modal';
-import Accordion from '../components/Accordion';
+import Table from '../Table';
+import Form from '../Form';
+import { createEntity, getDeleteEntityFn, getEntityData, getShowsAsOptions, updateEntityData } from '../../utils/entityData';
+import { updateSelectedVals } from '../../utils/selectMultiple';
+import * as formConstants from '../../constants/form_strings';
+import formatShowIDs from '../../utils/displayShowIDs';
+import RespModal from '../Modal';
+import Accordion from '../Accordion';
 
 
 export default function Hosts () {

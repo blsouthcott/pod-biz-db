@@ -1,8 +1,10 @@
 
 import express, { json } from 'express';
+import * as dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import { db } from './db-connector.mjs';
+
+import { db } from './db_connector.mjs';
 import * as episodesQueries from './episodesQueries.mjs';
 import * as hostsQueries from './hostsQueries.mjs';
 import * as producersQueries from './producersQueries.mjs';
@@ -14,10 +16,13 @@ import * as subscribersQueries from './subscribersQueries.mjs';
 const app = express();
 const PORT = '9381';
 
+dotenv.config();
+
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
+
 
 function combineShowIDs(results, id) {
     // id should be host_ID or subscriber_ID

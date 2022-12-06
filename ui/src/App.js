@@ -4,21 +4,21 @@ import './App.css';
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Navigation from './components/Navigation';
-import HomePage from './pages/HomePage';
-import Episodes from './pages/Episodes';
-import Hosts from './pages/Hosts';
-import Producers from './pages/Producers';
-import Shows from './pages/Shows';
-import Streams from './pages/Streams';
-import Subscribers from './pages/Subscribers';
+import HomePage from './components/pages/HomePage';
+import Episodes from './components/pages/Episodes';
+import Hosts from './components/pages/Hosts';
+import Producers from './components/pages/Producers';
+import Shows from './components/pages/Shows';
+import Streams from './components/pages/Streams';
+import Subscribers from './components/pages/Subscribers';
 
 
 function App() {
-  document.title = 'TCG Database';
+  document.title = 'Podcast Database';
   return (
     <div className="App">
         <header className="App-header">
-            <h1><article>The Code Giant</article> Podcast Network</h1>
+            <h1>Podcast Network Business Database</h1>
         </header>
         <Router>
             <Navigation />
@@ -44,7 +44,7 @@ function App() {
                 <Subscribers />
             </Route>
          </Router>
-         <footer>© Amy Fromandi and Ben Southcott 2022</footer>
+         <footer>© Ben Southcott 2022</footer>
 
     </div>
   );

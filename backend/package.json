@@ -2,9 +2,9 @@
   "name": "tcg-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "tcg_controller.mjs",
+  "main": "ontroller.mjs",
   "scripts": {
-    "start": "nodemon tcg_controller.mjs",
+    "start": "nodemon controller.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

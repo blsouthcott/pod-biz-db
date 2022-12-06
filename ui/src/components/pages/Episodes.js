@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import Table from '../components/Table';
-import Form from '../components/Form';
+import Table from '../Table';
+import Form from '../Form';
 // import { mockEpisodesData } from '../sample_data/episodes';
 // import { mockShowsData } from '../sample_data/shows';
-import { createEntity, updateEntityData, getEntityData, getShowsAsOptions, getDeleteEntityFn } from '../utils/entityData';
-import * as formConstants from '../constants/form_strings';
-import { formatDate } from '../utils/formatDate';
-import { backendURL } from '../constants/backendURL';
-import RespModal from '../components/Modal';
-import Accordion from '../components/Accordion';
+import { createEntity, updateEntityData, getEntityData, getShowsAsOptions, getDeleteEntityFn } from '../../utils/entityData';
+import * as formConstants from '../../constants/form_strings';
+import { formatDate } from '../../utils/formatDate'
+import { backendURL } from '../../constants/backendURL';
+import RespModal from '../Modal';
+import Accordion from '../Accordion';
 
 
 export default function Episodes () {

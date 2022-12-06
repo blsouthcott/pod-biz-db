@@ -1,13 +1,13 @@
 
 import React, { useEffect, useState } from 'react';
-import Table from '../components/Table';
-import Form from '../components/Form';
-import { createEntity, getDeleteEntityFn, getEntityData, updateEntityData, getShowsAsOptions } from '../utils/entityData';
-import { updateSelectedVals } from '../utils/selectMultiple';
-import * as formConstants from '../constants/form_strings';
-import { backendURL } from '../constants/backendURL';
-import Accordion from '../components/Accordion';
-import RespModal from '../components/Modal';
+import Table from '../Table';
+import Form from '../Form';
+import { createEntity, getDeleteEntityFn, getEntityData, updateEntityData, getShowsAsOptions } from '../../utils/entityData';
+import { updateSelectedVals } from '../../utils/selectMultiple';
+import * as formConstants from '../../constants/form_strings';
+import { backendURL } from '../../constants/backendURL';
+import Accordion from '../Accordion';
+import RespModal from '../Modal';
 
 export default function Subscribers () {
 
