@@ -8,13 +8,19 @@ import { backendURL } from '../../constants/backendURL';
 import RespModal from '../Modal';
 import Accordion from '../Accordion';
 
-import { load, selectShows } from '../../store/slices/showsSlice';
+import { showsLoaded, loadAllEntityData, loadShows } from '../../store/actions/entitiesActions';
+
 
 export default function Shows () {
 
-    const shows = useSelector(selectShows);
     const dispatch = useDispatch();
-
+    const initialDataLoaded = useSelector(state => state.entityData.initialDataLoaded);
+    if (!initialDataLoaded) {
+        dispatch(loadAllEntityData());
+    }
+    const showsDisplayData = useSelector(state => state.entityData.showsDisplayData);
+    console.log('shows display data: ', showsDisplayData)
+    
     // ****************
     // Load data to be displayed in shows table
     // ****************
@@ -25,18 +31,18 @@ export default function Shows () {
     ]
 
     // const [shows, setShows] = useState([]);
-    const loadShows = async () => {
-        // get shows data from mysql database
-        let showsData = await getEntityData('shows');
-        // transform data into ordered array
-        let showsAsArrays = []
-        for (let cnt=0; cnt<showsData.length; cnt++) {
-            let { show_ID, title } = showsData[cnt];
-            showsAsArrays.push([show_ID, title])
-        }
-        console.log(JSON.stringify(showsAsArrays));
-        setShows(showsAsArrays);
-    };
+    // const loadShows = async () => {
+    //     // get shows data from mysql database
+    //     let showsData = await getEntityData('shows');
+    //     // transform data into ordered array
+    //     let showsAsArrays = []
+    //     for (let cnt=0; cnt<showsData.length; cnt++) {
+    //         let { show_ID, title } = showsData[cnt];
+    //         showsAsArrays.push([show_ID, title])
+    //     }
+    //     console.log(JSON.stringify(showsAsArrays));
+    //     setShows(showsAsArrays);
+    // };
 
     // ****************
     // Define new show form
@@ -52,7 +58,7 @@ export default function Shows () {
             setRespModalMsg(`Success! A new show with title: ${newShowTitle}, has been added to the database.`);
             setRespModalIsOpen(true);
             setNewShowTitle('');
-            await loadShows();
+            dispatch(loadShows());
         } else {
             setRespModalMsg(`Unable to add new show to the database. Error status: ${respStatus}. Please try again later.`);
             setRespModalIsOpen(true);
@@ -80,16 +86,16 @@ export default function Shows () {
     const [respModalIsOpen, setRespModalIsOpen] = useState(false);
     const [respModalMsg, setRespModalMsg] = useState('');
 
-    const deleteShow = getDeleteEntityFn('Shows', loadShows, setRespModalIsOpen, setRespModalMsg);
+    const deleteShow = getDeleteEntityFn('Shows', showsLoaded, setRespModalIsOpen, setRespModalMsg);
 
-    useEffect(() => {
-        loadShows()
-    },
-    []);
+    // useEffect(() => {
+    //     showsLoaded()
+    // },
+    // []);
 
     return (
         <div>
-            <Table tableTitle={ tableTitle } tableHeaders={ tableHeaders } data={ shows } onDelete={ deleteShow } setEntityFn={ loadShows }/>
+            <Table tableTitle={ tableTitle } tableHeaders={ tableHeaders } data={ showsDisplayData } onDelete={ deleteShow } setEntityFn={ loadShows }/>
             <Accordion
                 title={'Add New Show'}
                 content={

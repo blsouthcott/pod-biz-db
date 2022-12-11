@@ -33,8 +33,8 @@ export default function Producers () {
         for (let cnt=0; cnt<producersData.length; cnt++) {
             let { producer_ID, show_ID, first_name, last_name, email_address, phone_number } = producersData[cnt];
             producersAsArrays.push([producer_ID, first_name, last_name, email_address, phone_number, show_ID]);
-        setProducers(producersAsArrays);
         }
+        setProducers(producersAsArrays);
     }
 
     // load shows to be displayed as options for which show a producer works on

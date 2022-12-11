@@ -4,6 +4,8 @@ import TableHeader from './TableHeader';
 
 
 function Table({ data, tableTitle, tableHeaders, onDelete, allowDeletion=true, setEntityFn }) {
+    console.log('data: ', data)
+    console.log('table headers: ', tableHeaders)
     return (
         <div>
             <table>

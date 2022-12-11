@@ -34,8 +34,8 @@ export default function Hosts () {
         for (let cnt=0; cnt<hostsData.length; cnt++) {
             let { host_ID, first_name, last_name, email_address, phone_number, show_ID } = hostsData[cnt];
             hostsAsArrays.push([host_ID, first_name, last_name, email_address, phone_number, show_ID === null ? [show_ID] : show_ID.length > 1 ? show_ID : [show_ID]]);
-        setHosts(hostsAsArrays);
         }
+        setHosts(hostsAsArrays);
     }
 
     // load options for shows host might host
