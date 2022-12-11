@@ -1,4 +1,7 @@
 
+import { episodesToArrays } from "../../utils/setDisplayData";
+
+
 const initialState = {
     initialDataLoaded: false,
     episodesData: [],
@@ -32,13 +35,7 @@ export const entitiesReducer = (state = initialState, action) => {
 
         case "LOAD_EPISODES":
 
-            let episodesArrays = []
-            for (let cnt=0; cnt<payload.length; cnt++) {
-                let { episode_ID, show_ID, title, episode_summary, date_released, hosts_names } = payload[cnt];
-                hosts_names = hosts_names.split(',').join(', ');
-                // console.log(episode_ID, show_ID, title, episode_summary, date_released, hosts_names);
-                episodesArrays.push([episode_ID, show_ID, title, episode_summary, date_released, hosts_names]);
-            };
+            const episodesArrays = episodesToArrays(payload);
             
             let episodesOptions = [];
             for (let ep of payload) {

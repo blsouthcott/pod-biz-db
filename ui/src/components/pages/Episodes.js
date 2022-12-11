@@ -1,28 +1,41 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Table from '../Table';
 import Form from '../Form';
-// import { mockEpisodesData } from '../sample_data/episodes';
-// import { mockShowsData } from '../sample_data/shows';
 import { createEntity, updateEntityData, getEntityData, getShowsAsOptions, getDeleteEntityFn } from '../../utils/entityData';
 import * as formConstants from '../../constants/form_strings';
 import { formatDate } from '../../utils/formatDate'
 import { backendURL } from '../../constants/backendURL';
 import RespModal from '../Modal';
 import Accordion from '../Accordion';
+import { episodesToArrays } from '../../utils/setDisplayData';
+import { loadEpisodes, loadAllEntityData } from '../../store/actions/entitiesActions';
+
 
 
 export default function Episodes () {
 
-    const episodesToArrays = (episodesData) => {
-        let episodesAsArrays = []
-        for (let cnt=0; cnt<episodesData.length; cnt++) {
-            let { episode_ID, show_ID, title, episode_summary, date_released, hosts_names } = episodesData[cnt];
-            hosts_names = hosts_names.split(',').join(', ');
-            console.log(episode_ID, show_ID, title, episode_summary, date_released, hosts_names);
-            episodesAsArrays.push([episode_ID, show_ID, title, episode_summary, date_released, hosts_names]);
-        }
-        setEpisodes(episodesAsArrays);
+    const dispatch = useDispatch();
+    const initialDataLoaded = useSelector(state => state.entityData.initialDataLoaded);
+    if (!initialDataLoaded) {
+        dispatch(loadAllEntityData());
     };
+    const allEpisodesDisplayData = useSelector(state => state.entityData.episodesDisplayData);
+    const showsOptions = useSelector(state => state.entityData.showsOptions);
+    const episodesOptions = useSelector(state => state.entityData.episodesOptions);
+
+    const [localEpisodesDisplayData, setLocalEpisodesDisplayData] = useState(allEpisodesDisplayData);
+
+    // const episodesToArrays = (episodesData) => {
+    //     let episodesAsArrays = []
+    //     for (let cnt=0; cnt<episodesData.length; cnt++) {
+    //         let { episode_ID, show_ID, title, episode_summary, date_released, hosts_names } = episodesData[cnt];
+    //         hosts_names = hosts_names.split(',').join(', ');
+    //         console.log(episode_ID, show_ID, title, episode_summary, date_released, hosts_names);
+    //         episodesAsArrays.push([episode_ID, show_ID, title, episode_summary, date_released, hosts_names]);
+    //     }
+    //     setEpisodes(episodesAsArrays);
+    // };
 
     // ****************
     // Load data to be displayed in table
@@ -37,21 +50,21 @@ export default function Episodes () {
         'Hosts'
     ]
 
-    const [episodes, setEpisodes] = useState([]);
-    const loadEpisodes = async () => {
-        // get episodes data from MySQL database
-        const episodesData = await getEntityData('episodes');
-        // transform data into ordered array
-        episodesToArrays(episodesData, setEpisodes);
-    }
+    // const [episodes, setEpisodes] = useState([]);
+    // const loadEpisodes = async () => {
+    //     // get episodes data from MySQL database
+    //     const episodesData = await getEntityData('episodes');
+    //     // transform data into ordered array
+    //     episodesToArrays(episodesData, setEpisodes);
+    // }
 
     
     // load shows to be used in select menu for which show an episode is associated with
-    const [showsOptions, setShowsOptions] = useState([]);
-    const loadShowsOptions = async () => {
-        const showsAsOptions = await getShowsAsOptions(false);
-        setShowsOptions(showsAsOptions);
-    }
+    // const [showsOptions, setShowsOptions] = useState([]);
+    // const loadShowsOptions = async () => {
+    //     const showsAsOptions = await getShowsAsOptions(false);
+    //     setShowsOptions(showsAsOptions);
+    // }
 
     // ****************
     // Define episode search form
@@ -80,8 +93,8 @@ export default function Episodes () {
         }
         const resp = await fetch(url);
         const episodesData = await resp.json();
-        console.log('episode search returned: ' + JSON.stringify(episodesData));
-        episodesToArrays(episodesData);
+        // console.log('episode search returned: ' + JSON.stringify(episodesData));
+        setLocalEpisodesDisplayData(episodesToArrays(episodesData));
     };
 
     const searchEpisodeFormTitle = '';
@@ -232,7 +245,7 @@ export default function Episodes () {
             for (let fn of [setEpisodeToUpdateID, setEpisodeToUpdateTitle, setEpisodeToUpdateSummary, setEpisodeToUpdateDateReleased]) {
                 fn('');
             }
-            await loadEpisodes();
+            loadEpisodes();
         } else {
             setRespModalMsg(`Unable to update episode in the database. Error status ${respStatus} Please try again later.`);
             setRespModalIsOpen(true);
@@ -247,12 +260,7 @@ export default function Episodes () {
             value: episodeToUpdateID,
             placeholder: 'Episode ID',
             onChange: e => fillEpisodeToUpdateData(e),
-            options: [...[{}], ...episodes.map((episode) => {
-                return {
-                    text: `${episode[0]}, ${episode[2]}`,
-                    value: episode[0]
-                };
-            })],
+            options: episodesOptions,
             labelText: formConstants.REQUIRED_FIELD_INDICATOR + 'Episode ID: ' + formConstants.AUTO_FILL_UPDATE_FORM_INSTR,
             inputIsRequired: true
         },
@@ -295,20 +303,20 @@ export default function Episodes () {
 
     const deleteEpisode = getDeleteEntityFn('Episodes', loadEpisodes, setRespModalIsOpen, setRespModalMsg);
 
-    useEffect(() => {
-        loadEpisodes()
-    },
-    []);
+    // useEffect(() => {
+    //     loadEpisodes()
+    // },
+    // []);
 
-    useEffect(() => {
-        loadShowsOptions()
-    },
-    []);
+    // useEffect(() => {
+    //     loadShowsOptions()
+    // },
+    // []);
 
     return (
         <div>
-            <Table tableTitle={ tableTitle } tableHeaders={ tableHeaders } data={ episodes } onDelete={ deleteEpisode } setEntityFn={ loadEpisodes }/>
-            <button className={ 'reset-table' } onClick={ () => { loadEpisodes(); clearSearchForm(); }}>Reset Table</button>
+            <Table tableTitle={ tableTitle } tableHeaders={ tableHeaders } data={ localEpisodesDisplayData } onDelete={ deleteEpisode } setEntityFn={ loadEpisodes }/>
+            <button className={ 'reset-table' } onClick={ () => { setLocalEpisodesDisplayData(allEpisodesDisplayData); clearSearchForm(); }}>Reset Table</button>
             <Accordion 
                 title={'Search Episode'} 
                 content={

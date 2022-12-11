@@ -1,6 +1,8 @@
 import { backendURL } from "../constants/backendURL";
 
 
+
+
 export async function getEntityData(entity) {
     const resp = await fetch(`${backendURL}/${entity}`);
     if (resp.status === 200) {
