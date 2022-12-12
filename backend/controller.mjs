@@ -136,7 +136,7 @@ app.get('/episodes', (req, res) => {
     console.log('request query: ' + JSON.stringify(req.query));
     let inputs;
     if (req.query.episodeTitle !== undefined || req.query.hostName !== undefined) {
-        episodeQuery = episodesQueries.searchEpisode({ episodeTitle: req.query.episodeTitle, hotName: req.query.hostName });
+        episodeQuery = episodesQueries.searchEpisode({ episodeTitle: req.query.episodeTitle, hostName: req.query.hostName });
         inputs = req.query.EpisodeTitle !== undefined && req.query.hostName !== undefined ? [`%${req.query.episodeTitle}%`, `%${req.query.hostName}%`] : req.query.episodeTitle !== undefined ? [`%${req.query.episodeTitle}%`] : [`%${req.query.hostName}%`];
     } else {
         episodeQuery = episodesQueries.selectAll();

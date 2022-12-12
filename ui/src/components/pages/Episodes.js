@@ -16,29 +16,28 @@ import { loadEpisodes, loadAllEntityData } from '../../store/actions/entitiesAct
 export default function Episodes () {
 
     const dispatch = useDispatch();
+    
     const initialDataLoaded = useSelector(state => state.entityData.initialDataLoaded);
     if (!initialDataLoaded) {
         dispatch(loadAllEntityData());
-    };
+    }
+
     const allEpisodesDisplayData = useSelector(state => state.entityData.episodesDisplayData);
     const showsOptions = useSelector(state => state.entityData.showsOptions);
     const episodesOptions = useSelector(state => state.entityData.episodesOptions);
 
+    // const loadPageData = () => {
+    //     dispatch(loadAllEntityData());
+    // };
+    
+
+    // console.log('all episodes display data: ', allEpisodesDisplayData);
+
+
     const [localEpisodesDisplayData, setLocalEpisodesDisplayData] = useState(allEpisodesDisplayData);
 
-    // const episodesToArrays = (episodesData) => {
-    //     let episodesAsArrays = []
-    //     for (let cnt=0; cnt<episodesData.length; cnt++) {
-    //         let { episode_ID, show_ID, title, episode_summary, date_released, hosts_names } = episodesData[cnt];
-    //         hosts_names = hosts_names.split(',').join(', ');
-    //         console.log(episode_ID, show_ID, title, episode_summary, date_released, hosts_names);
-    //         episodesAsArrays.push([episode_ID, show_ID, title, episode_summary, date_released, hosts_names]);
-    //     }
-    //     setEpisodes(episodesAsArrays);
-    // };
-
     // ****************
-    // Load data to be displayed in table
+    // Table title and headers
     // ****************
     const tableTitle = 'Episodes';
     const tableHeaders = [
@@ -49,22 +48,6 @@ export default function Episodes () {
         'Date Released',
         'Hosts'
     ]
-
-    // const [episodes, setEpisodes] = useState([]);
-    // const loadEpisodes = async () => {
-    //     // get episodes data from MySQL database
-    //     const episodesData = await getEntityData('episodes');
-    //     // transform data into ordered array
-    //     episodesToArrays(episodesData, setEpisodes);
-    // }
-
-    
-    // load shows to be used in select menu for which show an episode is associated with
-    // const [showsOptions, setShowsOptions] = useState([]);
-    // const loadShowsOptions = async () => {
-    //     const showsAsOptions = await getShowsAsOptions(false);
-    //     setShowsOptions(showsAsOptions);
-    // }
 
     // ****************
     // Define episode search form
@@ -303,10 +286,9 @@ export default function Episodes () {
 
     const deleteEpisode = getDeleteEntityFn('Episodes', loadEpisodes, setRespModalIsOpen, setRespModalMsg);
 
-    // useEffect(() => {
-    //     loadEpisodes()
-    // },
-    // []);
+    useEffect(() => {
+    },
+    []);
 
     // useEffect(() => {
     //     loadShowsOptions()

@@ -3,6 +3,7 @@ import { getEntityData } from "../../utils/entityData"
 
 
 export const loadAllEntityData = () => {
+    console.log("loading all entity data...")
     return async function (dispatch) {
         const [
             episodes,

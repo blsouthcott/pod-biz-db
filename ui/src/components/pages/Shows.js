@@ -17,7 +17,7 @@ export default function Shows () {
     const initialDataLoaded = useSelector(state => state.entityData.initialDataLoaded);
     if (!initialDataLoaded) {
         dispatch(loadAllEntityData());
-    }
+    };
     const showsDisplayData = useSelector(state => state.entityData.showsDisplayData);
     console.log('shows display data: ', showsDisplayData)
     
