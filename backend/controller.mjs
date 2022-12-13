@@ -156,8 +156,11 @@ app.get('/episodes', (req, res) => {
 
 
 app.post('/episodes', (req, res) => {
+    console.log('request body: ', req.body);
     const getNumHosts = episodesQueries.getNumHostsForShow()
     let inputs = [parseInt(req.body.newEpisodeShowID)]
+    console.log('query: ', getNumHosts);
+    console.log('inputs: ', inputs);
     db.query(getNumHosts, inputs, (err, results, fields) => {
         if (err) {
             console.log('error exectuing query: ' + err);

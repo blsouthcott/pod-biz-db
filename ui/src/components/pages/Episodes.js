@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Table from '../Table';
 import Form from '../Form';
-import { createEntity, updateEntityData, getEntityData, getShowsAsOptions, getDeleteEntityFn } from '../../utils/entityData';
+import { createEntity, updateEntityData, getEntityData, getDeleteEntityFn } from '../../utils/entityData';
 import * as formConstants from '../../constants/form_strings';
 import { formatDate } from '../../utils/formatDate'
 import { backendURL } from '../../constants/backendURL';
@@ -10,7 +10,6 @@ import RespModal from '../Modal';
 import Accordion from '../Accordion';
 import { episodesToArrays } from '../../utils/setDisplayData';
 import { loadEpisodes, loadAllEntityData } from '../../store/actions/entitiesActions';
-
 
 
 export default function Episodes () {
@@ -22,6 +21,7 @@ export default function Episodes () {
         dispatch(loadAllEntityData());
     }
 
+    const episodesData = useSelector(state => state.entityData.episodesData);
     const allEpisodesDisplayData = useSelector(state => state.entityData.episodesDisplayData);
     const showsOptions = useSelector(state => state.entityData.showsOptions);
     const episodesOptions = useSelector(state => state.entityData.episodesOptions);
@@ -33,8 +33,8 @@ export default function Episodes () {
 
     // console.log('all episodes display data: ', allEpisodesDisplayData);
 
-
-    const [localEpisodesDisplayData, setLocalEpisodesDisplayData] = useState(allEpisodesDisplayData);
+    const [displaySearched, setDisplaySearched] = useState(false);
+    const [localEpisodesDisplayData, setLocalEpisodesDisplayData] = useState([]);
 
     // ****************
     // Table title and headers
@@ -78,6 +78,7 @@ export default function Episodes () {
         const episodesData = await resp.json();
         // console.log('episode search returned: ' + JSON.stringify(episodesData));
         setLocalEpisodesDisplayData(episodesToArrays(episodesData));
+        setDisplaySearched(true);
     };
 
     const searchEpisodeFormTitle = '';
@@ -110,7 +111,7 @@ export default function Episodes () {
     // ****************
     // Define add new episode form
     // ****************
-    const [newEpisodeShowID, setNewEpisodeShowID] = useState('');
+    const [newEpisodeShowID, setNewEpisodeShowID] = useState(1);
     const [newEpisodeTitle, setNewEpisodeTitle] = useState('');
     const [newEpisodeSummary, setNewEpisodeSummary] = useState('');
     const [newEpisodeDateReleased, setNewEpisodeDateReleased] = useState('');
@@ -126,7 +127,9 @@ export default function Episodes () {
             for (let fn of [setNewEpisodeShowID, setNewEpisodeTitle, setNewEpisodeSummary, setNewEpisodeDateReleased]) {
                 fn('');
             };
-            await loadEpisodes();
+            dispatch(loadEpisodes());
+            // setLocalEpisodesDisplayData(allEpisodesDisplayData);
+            // console.log('local episodes display data: ', localEpisodesDisplayData);
         } else if (respStatus === 400) {
             setRespModalMsg(`No hosts are assigned to show ${newEpisodeShowID}. Please navigate to the Hosts page and update a currently existing Host or add a new Host.`);
             setRespModalIsOpen(true);
@@ -198,7 +201,6 @@ export default function Episodes () {
         setEpisodeToUpdateSummary('');
         setEpisodeToUpdateDateReleased('');
         if (e.target.value) {
-            const episodesData = await getEntityData('episodes');
             let episode;
             for (let ep of episodesData) {
                 if (ep.episode_ID == e.target.value) {
@@ -228,11 +230,11 @@ export default function Episodes () {
             for (let fn of [setEpisodeToUpdateID, setEpisodeToUpdateTitle, setEpisodeToUpdateSummary, setEpisodeToUpdateDateReleased]) {
                 fn('');
             }
-            loadEpisodes();
+            dispatch(loadEpisodes());
         } else {
             setRespModalMsg(`Unable to update episode in the database. Error status ${respStatus} Please try again later.`);
             setRespModalIsOpen(true);
-        }
+        };
     };
 
     const updateEpisodeFormTitle = formConstants.REQUIRED_FIELD_INSTR;
@@ -284,21 +286,31 @@ export default function Episodes () {
     const [respModalIsOpen, setRespModalIsOpen] = useState(false);
     const [respModalMsg, setRespModalMsg] = useState('');
 
-    const deleteEpisode = getDeleteEntityFn('Episodes', loadEpisodes, setRespModalIsOpen, setRespModalMsg);
-
-    useEffect(() => {
-    },
-    []);
+    const deleteEpisode = getDeleteEntityFn(
+        'Episodes', 
+        dispatch, 
+        loadEpisodes, 
+        setRespModalIsOpen, 
+        setRespModalMsg
+    );
 
     // useEffect(() => {
-    //     loadShowsOptions()
+    //     const loadData = async () => {
+    //         dispatch(loadAllEntityData());
+    //     }
+    //     loadData();
+    // },
+    // []);
+
+    // useEffect(() => {
+    //     setLocalEpisodesDisplayData(allEpisodesDisplayData);
     // },
     // []);
 
     return (
         <div>
-            <Table tableTitle={ tableTitle } tableHeaders={ tableHeaders } data={ localEpisodesDisplayData } onDelete={ deleteEpisode } setEntityFn={ loadEpisodes }/>
-            <button className={ 'reset-table' } onClick={ () => { setLocalEpisodesDisplayData(allEpisodesDisplayData); clearSearchForm(); }}>Reset Table</button>
+            <Table tableTitle={ tableTitle } tableHeaders={ tableHeaders } data={ displaySearched ? localEpisodesDisplayData : allEpisodesDisplayData } onDelete={ deleteEpisode } setEntityFn={ loadEpisodes }/>
+            <button className={ 'reset-table' } onClick={ () => { setDisplaySearched(false); clearSearchForm(); }}>Reset Table</button>
             <Accordion 
                 title={'Search Episode'} 
                 content={

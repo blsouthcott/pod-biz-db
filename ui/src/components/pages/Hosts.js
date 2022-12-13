@@ -1,5 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Table from '../Table';
 import Form from '../Form';
 import { createEntity, getDeleteEntityFn, getEntityData, getShowsAsOptions, updateEntityData } from '../../utils/entityData';
@@ -11,6 +12,8 @@ import Accordion from '../Accordion';
 
 
 export default function Hosts () {
+
+    const dispatch = useDispatch();
 
     // ****************
     // Load data to be displayed in table

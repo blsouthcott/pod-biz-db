@@ -86,7 +86,7 @@ export default function Shows () {
     const [respModalIsOpen, setRespModalIsOpen] = useState(false);
     const [respModalMsg, setRespModalMsg] = useState('');
 
-    const deleteShow = getDeleteEntityFn('Shows', showsLoaded, setRespModalIsOpen, setRespModalMsg);
+    const deleteShow = getDeleteEntityFn('Shows', dispatch, loadShows, setRespModalIsOpen, setRespModalMsg);
 
     // useEffect(() => {
     //     showsLoaded()
@@ -102,7 +102,7 @@ export default function Shows () {
                     <Form title={ addNewShowFormTitle } inputs={ addNewShowFormInputs } onSubmit={ addNewShow }/>
                 }
             />
-                        <RespModal modalIsOpen={ respModalIsOpen } setModalIsOpenFn={ setRespModalIsOpen } modalMsg={ respModalMsg }></RespModal>
+            <RespModal modalIsOpen={ respModalIsOpen } setModalIsOpenFn={ setRespModalIsOpen } modalMsg={ respModalMsg }></RespModal>
         </div>
     )
 }

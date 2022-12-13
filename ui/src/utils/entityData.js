@@ -1,8 +1,6 @@
 import { backendURL } from "../constants/backendURL";
 
 
-
-
 export async function getEntityData(entity) {
     const resp = await fetch(`${backendURL}/${entity}`);
     if (resp.status === 200) {
@@ -44,11 +42,6 @@ export async function updateEntityData(entity, entityData) {
 
 export async function deleteEntityData(entity, id, setModalOpenFn, setModalMsgFn) {
     const resp = await fetch(`${backendURL}/${entity}/${id}`, {method: 'DELETE'});
-    // if (resp.status === 200) {
-    //     alert(`successfully deleted from database ${entity.slice(0, entity.length-1)} with ID: ${id}`);
-    // } else {
-    //     alert('Deletion failed. Please try again later.');
-    // };
     if (resp.status === 200) {
         setModalMsgFn(`Success! ${entity.slice(0, entity.length-1)} with id: ${id}, has been deleted from the database.`);
     } else {
@@ -57,37 +50,37 @@ export async function deleteEntityData(entity, id, setModalOpenFn, setModalMsgFn
     setModalOpenFn(true);
 }
 
-export function getDeleteEntityFn(entity, setEntityFn, setModalOpenFn, setModalMsgFn) {
+export function getDeleteEntityFn(entity, dispatch, setEntityFn, setModalOpenFn, setModalMsgFn) {
     switch(entity) {
         case 'Episodes':
             return async function (id) {
                 await deleteEntityData('episodes', id, setModalOpenFn, setModalMsgFn);
-                await setEntityFn();
+                await dispatch(setEntityFn());
             };
         case 'Hosts':
             return async function (id) {
                 await deleteEntityData('hosts', id, setModalOpenFn, setModalMsgFn);
-                await setEntityFn();
+                await dispatch(setEntityFn());
             };
         case 'Producers':
             return async function (id) {
                 await deleteEntityData('producers', id, setModalOpenFn, setModalMsgFn);
-                await setEntityFn();
+                await dispatch(setEntityFn());
             };
         case 'Shows':
             return async function (id) {
                 await deleteEntityData('shows', id, setModalOpenFn, setModalMsgFn);
-                await setEntityFn();
+                await dispatch(setEntityFn());
             };
         case 'Streams':
             return async function (id) {
                 await deleteEntityData('streams', id, setModalOpenFn, setModalMsgFn);
-                await setEntityFn();
+                await dispatch(setEntityFn());
             };
         case 'Subscribers':
             return async function (id) {
                 await deleteEntityData('subscribers', id, setModalOpenFn, setModalMsgFn);
-                await setEntityFn();
+                await dispatch(setEntityFn());
             };
         default: 
             return function (id) {
