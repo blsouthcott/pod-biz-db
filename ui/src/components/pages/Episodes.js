@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Table from '../Table';
 import Form from '../Form';
-import { createEntity, updateEntityData, getEntityData, getDeleteEntityFn } from '../../utils/entityData';
+import { createEntity, updateEntityData, getDeleteEntityFn } from '../../utils/entityData';
 import * as formConstants from '../../constants/form_strings';
 import { formatDate } from '../../utils/formatDate'
 import { backendURL } from '../../constants/backendURL';
@@ -19,7 +19,7 @@ export default function Episodes () {
     const initialDataLoaded = useSelector(state => state.entityData.initialDataLoaded);
     if (!initialDataLoaded) {
         dispatch(loadAllEntityData());
-    }
+    };
 
     const episodesData = useSelector(state => state.entityData.episodesData);
     const allEpisodesDisplayData = useSelector(state => state.entityData.episodesDisplayData);

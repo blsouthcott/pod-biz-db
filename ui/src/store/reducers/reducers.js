@@ -56,16 +56,22 @@ export const entitiesReducer = (state = initialState, action) => {
 
         case "LOAD_HOSTS":
 
-            let hostsArrays = []
+            const hostsArrays = []
+            const hostsOptions = [];
             for (let cnt=0; cnt<payload.length; cnt++) {
                 let { host_ID, first_name, last_name, email_address, phone_number, show_ID } = payload[cnt];
-                hostsArrays.push([host_ID, first_name, last_name, email_address, phone_number, show_ID === null ? [show_ID] : show_ID.length > 1 ? show_ID : [show_ID]]);
+                hostsArrays.push([host_ID, first_name, last_name, email_address, phone_number, JSON.stringify(show_ID === null ? [show_ID] : show_ID.length > 1 ? show_ID : [show_ID])]);
+                hostsOptions.push({
+                    text: `${payload[cnt].host_ID}, ${payload[cnt].first_name} ${payload[cnt].last_name}`,
+                    value: payload[cnt].host_ID
+                })
             }
 
             return {
                 ...state,
                 hostsData: payload,
                 hostsDisplayData: hostsArrays,
+                hostsOptions: hostsOptions
             };
 
         case "LOAD_PRODUCERS":

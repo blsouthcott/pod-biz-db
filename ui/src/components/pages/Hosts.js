@@ -6,14 +6,24 @@ import Form from '../Form';
 import { createEntity, getDeleteEntityFn, getEntityData, getShowsAsOptions, updateEntityData } from '../../utils/entityData';
 import { updateSelectedVals } from '../../utils/selectMultiple';
 import * as formConstants from '../../constants/form_strings';
-import formatShowIDs from '../../utils/displayShowIDs';
 import RespModal from '../Modal';
 import Accordion from '../Accordion';
+import { loadHosts, loadAllEntityData } from '../../store/actions/entitiesActions';
 
 
 export default function Hosts () {
 
     const dispatch = useDispatch();
+
+    const initialDataLoaded = useSelector(state => state.entityData.initialDataLoaded);
+    if (!initialDataLoaded) {
+        dispatch(loadAllEntityData());
+    };
+
+    const hostsData = useSelector(state => state.entityData.hostsData);
+    const hostsDisplayData = useSelector(state => state.entityData.hostsDisplayData);
+    const showsOptions = useSelector(state => state.entityData.showsOptions);
+    const hostsOptions = useSelector(state => state.entityData.hostsOptions);
 
     // ****************
     // Load data to be displayed in table
@@ -28,25 +38,25 @@ export default function Hosts () {
         'Hosted Shows'
     ]
 
-    const [hosts, setHosts] = useState([]);
-    const loadHosts = async () => {
-        // get hosts data from mysql db
-        let hostsData = await getEntityData('hosts');
-        // transform data into ordered array
-        let hostsAsArrays = []
-        for (let cnt=0; cnt<hostsData.length; cnt++) {
-            let { host_ID, first_name, last_name, email_address, phone_number, show_ID } = hostsData[cnt];
-            hostsAsArrays.push([host_ID, first_name, last_name, email_address, phone_number, show_ID === null ? [show_ID] : show_ID.length > 1 ? show_ID : [show_ID]]);
-        }
-        setHosts(hostsAsArrays);
-    }
+    // const [hosts, setHosts] = useState([]);
+    // const loadHosts = async () => {
+    //     // get hosts data from mysql db
+    //     let hostsData = await getEntityData('hosts');
+    //     // transform data into ordered array
+    //     let hostsAsArrays = []
+    //     for (let cnt=0; cnt<hostsData.length; cnt++) {
+    //         let { host_ID, first_name, last_name, email_address, phone_number, show_ID } = hostsData[cnt];
+    //         hostsAsArrays.push([host_ID, first_name, last_name, email_address, phone_number, show_ID === null ? [show_ID] : show_ID.length > 1 ? show_ID : [show_ID]]);
+    //     }
+    //     setHosts(hostsAsArrays);
+    // }
 
     // load options for shows host might host
-    const [showsOptions, setShowsOptions] = useState([]);
-    const loadShowsOptions = async () => {
-        const showsAsOptions = await getShowsAsOptions(true);
-        setShowsOptions(showsAsOptions);
-    }
+    // const [showsOptions, setShowsOptions] = useState([]);
+    // const loadShowsOptions = async () => {
+    //     const showsAsOptions = await getShowsAsOptions(true);
+    //     setShowsOptions(showsAsOptions);
+    // }
 
     // ****************
     // Define add new host form
@@ -69,7 +79,7 @@ export default function Hosts () {
             for (let fn of [setNewHostFirstName, setNewHostLastName, setNewHostEmail, setNewHostPhone, setNewHostShowIDs]) {
                 fn('');
             };
-            await loadHosts();
+            dispatch(loadHosts());
         } else {
             setRespModalMsg(`Unable to add new host to the database. Error status ${respStatus}Please try again later.`);
             setRespModalIsOpen(true);
@@ -153,21 +163,21 @@ export default function Hosts () {
         setHostToUpdateShowIDs([]);
         if (e.target.value) {
             let host;
-            for (let h of hosts) {
-                if (h[0] == e.target.value) {
+            for (let h of hostsData) {
+                if (h.host_ID == e.target.value) {
                     host = h
                 };
             };
             if (host === undefined) {
-                alert(`no Host associated with ID: ${e.target.value} was found in the database!`)
+                setRespModalMsg(`no Host associated with ID: ${e.target.value} was found in the database!`);
+                setRespModalIsOpen(true);
             } else {
                 // set input field values based on episode data return by search
-                setHostToUpdateFirstName(host[1]);
-                setHostToUpdateLastName(host[2]);
-                setHostToUpdateEmail(host[3]);
-                setHostToUpdatePhone(host[4]);
-                console.log('show IDs: ', host[5]);
-                setHostToUpdateShowIDs(host[5]);
+                setHostToUpdateFirstName(host.first_name);
+                setHostToUpdateLastName(host.last_name);
+                setHostToUpdateEmail(host.email_address);
+                setHostToUpdatePhone(host.phone_number);
+                setHostToUpdateShowIDs(host.show_ID);
             };
         }
     }
@@ -184,7 +194,7 @@ export default function Hosts () {
                 fn('');
             }
             setHostToUpdateShowIDs([]);
-            await loadHosts();
+            dispatch(loadHosts());
         } else {
             setRespModalMsg(`Unable to update host in the database. Error status: ${respStatus}. Please try again later.`);
             setRespModalIsOpen(true);
@@ -199,12 +209,7 @@ export default function Hosts () {
             value: hostToUpdateID,
             placeholder: 'Host to update ID',
             onChange: e => fillHostToUpdateData(e),
-            options: [...[{}], ...hosts.map((host) => {
-                return {
-                    text: `${host[0]}, ${host[1]} ${host[2]}`,
-                    value: host[0]
-                };
-            })],
+            options: [...[{}], ...hostsOptions],
             labelText: formConstants.REQUIRED_FIELD_INDICATOR + 'Host ID: ' + formConstants.AUTO_FILL_UPDATE_FORM_INSTR,
             inputIsRequired: true
         },
@@ -264,17 +269,23 @@ export default function Hosts () {
     const [respModalIsOpen, setRespModalIsOpen] = useState(false);
     const [respModalMsg, setRespModalMsg] = useState('');
 
-    const deleteHost = getDeleteEntityFn('Hosts', loadHosts, setRespModalIsOpen, setRespModalMsg);
+    const deleteHost = getDeleteEntityFn(
+        'Hosts',
+        dispatch,
+        loadHosts, 
+        setRespModalIsOpen, 
+        setRespModalMsg
+    );
 
-    useEffect(() => {
-        loadHosts()
-    },
-    []);
+    // useEffect(() => {
+    //     loadHosts()
+    // },
+    // []);
     
-    useEffect(() => {
-        loadShowsOptions()
-    },
-    []);
+    // useEffect(() => {
+    //     loadShowsOptions()
+    // },
+    // []);
 
 
     return (
