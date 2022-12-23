@@ -52,41 +52,13 @@ export async function deleteEntityData(entity, id, setModalOpenFn, setModalMsgFn
 
 
 export function getDeleteEntityFn(entity, dispatch, setEntityFn, setModalOpenFn, setModalMsgFn) {
-    switch(entity) {
-        case 'Episodes':
-            return async function (id) {
-                await deleteEntityData('episodes', id, setModalOpenFn, setModalMsgFn);
-                await dispatch(setEntityFn());
-            };
-        case 'Hosts':
-            return async function (id) {
-                await deleteEntityData('hosts', id, setModalOpenFn, setModalMsgFn);
-                await dispatch(setEntityFn());
-            };
-        case 'Producers':
-            return async function (id) {
-                await deleteEntityData('producers', id, setModalOpenFn, setModalMsgFn);
-                await dispatch(setEntityFn());
-            };
-        case 'Shows':
-            return async function (id) {
-                await deleteEntityData('shows', id, setModalOpenFn, setModalMsgFn);
-                await dispatch(setEntityFn());
-            };
-        case 'Streams':
-            return async function (id) {
-                await deleteEntityData('streams', id, setModalOpenFn, setModalMsgFn);
-                await dispatch(setEntityFn());
-            };
-        case 'Subscribers':
-            return async function (id) {
-                await deleteEntityData('subscribers', id, setModalOpenFn, setModalMsgFn);
-                await dispatch(setEntityFn());
-            };
-        default: 
-            return function (id) {
-                setModalMsgFn('Invalid option passed to getDeleteEntityFn');
-                setModalOpenFn(true);
-            };
+    return async function (id) {
+        await deleteEntityData(
+            entity.toLowerCase(),
+            id,
+            setModalOpenFn,
+            setModalMsgFn
+        );
+        dispatch(setEntityFn());
     };
 };

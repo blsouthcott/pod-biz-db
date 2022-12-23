@@ -23,11 +23,11 @@ export default function RespModal ({ modalIsOpen, setModalIsOpenFn, modalMsg }) 
 
     const setModalIsOpenToFalse = () => {
         setModalIsOpenFn(false);
-    }
+    };
 
     return (
         <div className='resp-modal'>
-            <Modal 
+            <Modal
               isOpen={ modalIsOpen } 
               appElement={ document.getElementById('root') }
               style={ customStyles } >
