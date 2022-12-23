@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { loadAllEntityData } from '../../store/actions/entitiesActions';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function HomePage () {
     const dispatch = useDispatch();
-    dispatch(loadAllEntityData());
+    const initialDataLoaded = useSelector(state => state.entityData.initialDataLoaded);
+    if (!initialDataLoaded) {
+        dispatch(loadAllEntityData());
+    };
     return (
         <div>
             <div className='overview'>

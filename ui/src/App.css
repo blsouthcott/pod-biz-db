@@ -9,6 +9,14 @@
     text-decoration: None;
 }
 
+.link:visited {
+    color: darkslategrey;
+}
+
+.link:hover {
+    font-weight: 900;
+}
+
 .divider {
     display: inline-block;
 }
@@ -17,7 +25,6 @@ fieldset {
     text-align: left;
     border: none;
     padding: 0px;
-
 }
 
 .overview, .entity-summaries {

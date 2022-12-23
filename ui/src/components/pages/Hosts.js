@@ -3,12 +3,13 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Table from '../Table';
 import Form from '../Form';
-import { createEntity, getDeleteEntityFn, getEntityData, getShowsAsOptions, updateEntityData } from '../../utils/entityData';
+import { createEntity, getDeleteEntityFn, updateEntityData } from '../../utils/entityData';
 import { updateSelectedVals } from '../../utils/selectMultiple';
 import * as formConstants from '../../constants/form_strings';
 import RespModal from '../Modal';
 import Accordion from '../Accordion';
 import { loadHosts, loadAllEntityData } from '../../store/actions/entitiesActions';
+import { formatShowID } from '../../utils/setDisplayData';
 
 
 export default function Hosts () {
@@ -37,26 +38,6 @@ export default function Hosts () {
         'Phone Number',
         'Hosted Shows'
     ]
-
-    // const [hosts, setHosts] = useState([]);
-    // const loadHosts = async () => {
-    //     // get hosts data from mysql db
-    //     let hostsData = await getEntityData('hosts');
-    //     // transform data into ordered array
-    //     let hostsAsArrays = []
-    //     for (let cnt=0; cnt<hostsData.length; cnt++) {
-    //         let { host_ID, first_name, last_name, email_address, phone_number, show_ID } = hostsData[cnt];
-    //         hostsAsArrays.push([host_ID, first_name, last_name, email_address, phone_number, show_ID === null ? [show_ID] : show_ID.length > 1 ? show_ID : [show_ID]]);
-    //     }
-    //     setHosts(hostsAsArrays);
-    // }
-
-    // load options for shows host might host
-    // const [showsOptions, setShowsOptions] = useState([]);
-    // const loadShowsOptions = async () => {
-    //     const showsAsOptions = await getShowsAsOptions(true);
-    //     setShowsOptions(showsAsOptions);
-    // }
 
     // ****************
     // Define add new host form
@@ -177,7 +158,7 @@ export default function Hosts () {
                 setHostToUpdateLastName(host.last_name);
                 setHostToUpdateEmail(host.email_address);
                 setHostToUpdatePhone(host.phone_number);
-                setHostToUpdateShowIDs(host.show_ID);
+                setHostToUpdateShowIDs(formatShowID(host.show_ID, {toStr: false}));
             };
         }
     }
@@ -290,7 +271,7 @@ export default function Hosts () {
 
     return (
         <div>
-            <Table tableTitle={ tableTitle } tableHeaders={ tableHeaders } data={ hosts.map(host => host.map((val, i) => i === 5 ? JSON.stringify(val) : val)) } onDelete={ deleteHost } allowDeletion={false}/>
+            <Table tableTitle={ tableTitle } tableHeaders={ tableHeaders } data={ hostsDisplayData } onDelete={ deleteHost } allowDeletion={false}/>
             <Accordion
                 title={'Add New Host'}
                 content={

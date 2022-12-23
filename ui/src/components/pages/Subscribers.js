@@ -1,5 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Table from '../Table';
 import Form from '../Form';
 import { createEntity, getDeleteEntityFn, getEntityData, updateEntityData, getShowsAsOptions } from '../../utils/entityData';
@@ -8,36 +9,22 @@ import * as formConstants from '../../constants/form_strings';
 import { backendURL } from '../../constants/backendURL';
 import Accordion from '../Accordion';
 import RespModal from '../Modal';
+import { loadSubscribers, loadAllEntityData } from '../../store/actions/entitiesActions';
+import { formatShowID, subscribersToArrays } from '../../utils/setDisplayData';
 
 export default function Subscribers () {
 
-    const validateAgeInput = (e, ageVar, setAgeVarFn) =>
-    {e.target.value == '' || e.target.value >= 1 ? setAgeVarFn(e.target.value) : setAgeVarFn(ageVar)}
-         
-    // set gender select options
-    const genderOptions = [
-        {
-            value: '',
-            text: '',
+    const dispatch = useDispatch();
 
-        },
-        {
-            value: 'Female',
-            text: 'Female'
-        },
-        {
-            value: 'Male',
-            text: 'Male',
-        },
-        {
-            value: 'Non-Binary',
-            text: 'Non-Binary'
-        },
-        {
-            value: 'Prefer not to say',
-            text: 'Prefer not to say'
-        }
-    ]
+    const initialDataLoaded = useSelector(state => state.entityData.initialDataLoaded);
+    if (!initialDataLoaded) {
+        dispatch(loadAllEntityData());
+    };
+
+    const subscribersData = useSelector(state => state.entityData.subscribersData);
+    const subscribersDisplayData = useSelector(state => state.entityData.subscribersDisplayData);
+    const showsOptions = useSelector(state => state.entityData.showsOptions);
+    const subscribersOptions = useSelector(state => state.entityData.subscribersOptions);
 
     // ****************
     // Load data to be displayed in table
@@ -54,34 +41,13 @@ export default function Subscribers () {
         'Subscribed Shows'
     ]
 
-    const [showsOptions, setShowsOptions] = useState([]);
-    const loadShowsOptions = async () => {
-        const showsAsOptions = await getShowsAsOptions(true); // pass true so we don't get a blank first option since it's a multi select
-        setShowsOptions(showsAsOptions);
-    };
-
-    const subscribersToArrays = (subscribersData) => {
-        let subscribersAsArrays = []
-        for (let cnt=0; cnt<subscribersData.length; cnt++) {
-            let { subscriber_ID, first_name, last_name, email_address, phone_number, age, gender, show_ID } = subscribersData[cnt];
-            console.log(subscriber_ID, first_name, last_name, email_address, phone_number, age, gender, show_ID)
-            subscribersAsArrays.push([subscriber_ID, first_name, last_name, email_address, phone_number, age, gender, show_ID === null ? [show_ID] : show_ID.length > 1 ? show_ID : [show_ID]]);
-        }
-        setSubscribers(subscribersAsArrays);
-    };
-
-
-    const [subscribers, setSubscribers] = useState([]);
-    const loadSubscribers = async () => {
-        // get subscribers data from db
-        const subscribersData = await getEntityData('subscribers');
-        // transform data into ordered array
-        subscribersToArrays(subscribersData, setSubscribers)
-    };
+    const [displaySearched, setDisplaySearched] = useState(false);
+    const [localSubscribersDisplayData, setLocalSubscribersDisplayData] = useState([]);
 
     const clearSearchForm = () => {
         setSubscriberSearchFirstName('');
         setSubscriberSearchLastName('');
+        setDisplaySearched(false);
     };
 
     // ****************
@@ -105,8 +71,8 @@ export default function Subscribers () {
         const resp = await fetch(url);
         console.log(resp);
         const subscribersData = await resp.json()
-        subscribersToArrays(subscribersData);     
-        // alert(`Searching for subscriber with name: ${searchSubscriber.subscriberSearchFirstName} ${searchSubscriber.subscriberSearchLastName}`);
+        setLocalSubscribersDisplayData(subscribersToArrays(subscribersData));
+        setDisplaySearched(true);
     };
 
     const searchSubscriberFormTitle = '';
@@ -134,6 +100,38 @@ export default function Subscribers () {
         }
     ]
 
+    const validateAgeInput = (e, ageVar, setAgeVarFn) => {
+        e.target.value == '' || e.target.value >= 1 ? setAgeVarFn(e.target.value) : setAgeVarFn(ageVar);
+    };
+
+    const preferNotToSay = 'Prefer not to say';
+    const nonBinary = 'Non-Binary';
+    const female = 'Female';
+    const male = 'Male';
+    
+    // set gender select options
+    const genderOptions = [
+        {
+            value: '',
+            text: '',
+        },
+        {
+            value: female,
+            text: female
+        },
+        {
+            value: male,
+            text: male
+        },
+        {
+            value: nonBinary,
+            text: nonBinary
+        },
+        {
+            value: preferNotToSay,
+            text: preferNotToSay
+        }
+    ]
 
     // ****************
     // Load add new subscriber form
@@ -156,11 +154,11 @@ export default function Subscribers () {
         setRespModalIsOpen(true);
         if (respStatus === 201) {
             setRespModalMsg(`a new Subscriber with name: ${newSubscriber.newSubscriberFirstName} ${newSubscriber.newSubscriberLastName} has been aded to the database!`);
-            await loadSubscribers();
             for (let fn of [setNewSubscriberFirstName, setNewSubscriberLastName, setNewSubscriberEmail, setNewSubscriberPhone, setNewSubscriberAge, setNewSubscriberGender]) {
                 fn('');
             };
             setNewSubscriberShowIDs([]);
+            dispatch(loadSubscribers());
         } else {
             setRespModalMsg(`Unable to add new subscribers to database. Error status ${respStatus} Please try again later.`);
         };
@@ -263,9 +261,6 @@ export default function Subscribers () {
 
     const fillSubscriberToUpdateData = (e) => {
         // this function autofills the data in the update form based on the user input
-
-        // once we get the backend up and running, search for Subscribers data
-        // based on value in SubscriberToUpdateID input
         setSubscriberToUpdateID(e.target.value);
         console.log('onBlur event triggered to fill Subscriber data');
         setSubscriberToUpdateFirstName('');
@@ -278,8 +273,8 @@ export default function Subscribers () {
 
         if (e.target.value) {
             let subscriber;
-            for (let s of subscribers) {
-                if (s[0] == e.target.value) {
+            for (let s of subscribersData) {
+                if (s.subscriber_ID == e.target.value) {
                     subscriber = s;
                 }
             };
@@ -288,13 +283,13 @@ export default function Subscribers () {
             }
             else {
                 // set input field values based on subscriber data return by search
-                setSubscriberToUpdateFirstName(subscriber[1]);
-                setSubscriberToUpdateLastName(subscriber[2]);
-                setSubscriberToUpdateEmail(subscriber[3]);
-                setSubscriberToUpdatePhone(subscriber[4]);
-                setSubscriberToUpdateAge(subscriber[5]);
-                setSubscriberToUpdateGender(subscriber[6]);
-                setSubscriberToUpdateSubscribedShowIDs(subscriber[7]);
+                setSubscriberToUpdateFirstName(subscriber.first_name);
+                setSubscriberToUpdateLastName(subscriber.last_name);
+                setSubscriberToUpdateEmail(subscriber.email_address);
+                setSubscriberToUpdatePhone(subscriber.phone_number);
+                setSubscriberToUpdateAge(subscriber.age);
+                setSubscriberToUpdateGender(subscriber.gender);
+                setSubscriberToUpdateSubscribedShowIDs(formatShowID(subscriber.show_ID, {toStr: false}));
             };
         }
     }   
@@ -309,11 +304,11 @@ export default function Subscribers () {
         setRespModalIsOpen(true);
         if (respStatus === 200) {
             setRespModalMsg(`Success! Subscriber with ID: ${subscriberToUpdate.subscriberToUpdateID} has been updated in the database.`)
-            await loadSubscribers();
             for (let fn of [setSubscriberToUpdateID, setSubscriberSearchFirstName, setSubscriberSearchLastName, setSubscriberToUpdateEmail, setSubscriberToUpdatePhone, setSubscriberToUpdateAge, setSubscriberToUpdateGender]) {
                 fn('');
             };
             setSubscriberToUpdateSubscribedShowIDs([]);
+            dispatch(loadSubscribers());
         } else {
             setRespModalMsg(`Unable to update subscriber in the database. Error status: ${respStatus} Please try again later.`);
         };
@@ -327,12 +322,7 @@ export default function Subscribers () {
             value: subscriberToUpdateID,
             placeholder: 'Subscriber ID',
             onChange: e => fillSubscriberToUpdateData(e),
-            options: [...[{}], ...subscribers.map((subscriber) => {
-                return {
-                    text: `${subscriber[0]}, ${subscriber[1]} ${subscriber[2]}`,
-                    value: subscriber[0]
-                };
-            })],
+            options: [...[{}], ...subscribersOptions],
             labelText: formConstants.REQUIRED_FIELD_INDICATOR + 'Subscriber ID: ' + formConstants.AUTO_FILL_UPDATE_FORM_INSTR,
             inputIsRequired: true
         },
@@ -410,21 +400,27 @@ export default function Subscribers () {
     const [respModalIsOpen, setRespModalIsOpen] = useState(false);
     const [respModalMsg, setRespModalMsg] = useState('');
 
-    const deleteSubscriber = getDeleteEntityFn('Subscribers', loadSubscribers, setRespModalIsOpen, setRespModalMsg);
+    const deleteSubscriber = getDeleteEntityFn(
+        'Subscribers',
+        dispatch,
+        loadSubscribers, 
+        setRespModalIsOpen, 
+        setRespModalMsg
+    );
 
-    useEffect(() => {
-        loadSubscribers()
-    },
-    []);
+    // useEffect(() => {
+    //     loadSubscribers()
+    // },
+    // []);
 
-    useEffect(() => {
-        loadShowsOptions()
-    },
-    []);
+    // useEffect(() => {
+    //     loadShowsOptions()
+    // },
+    // []);
 
     return (
         <div>
-            <Table tableTitle={ tableTitle } tableHeaders={ tableHeaders } data={ subscribers.map(subscriber => subscriber.map((val, i) => i === 7 ? JSON.stringify(val) : val)) } onDelete={ deleteSubscriber } setEntityFn={ loadSubscribers }/>            
+            <Table tableTitle={ tableTitle } tableHeaders={ tableHeaders } data={ displaySearched === true ? localSubscribersDisplayData : subscribersDisplayData } onDelete={ deleteSubscriber } setEntityFn={ loadSubscribers }/>            
             <button className={ 'reset-table' } onClick={ () => { loadSubscribers(); clearSearchForm(); }}>Reset Table</button>
             <Accordion
                  title={'Search Subscriber'}

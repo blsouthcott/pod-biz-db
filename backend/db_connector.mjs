@@ -1,10 +1,11 @@
 
 import * as dotenv from 'dotenv';
-import mysql from 'mysql';
+// import mysql from 'mysql';
+import mysql2 from 'mysql2';
 
 dotenv.config('');
 
-export const db = mysql.createConnection(
+export const db = mysql2.createConnection(
     {
         host: 'localhost',
         user: 'root',

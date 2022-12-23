@@ -1,5 +1,5 @@
 
-import { episodesToArrays } from "../../utils/setDisplayData";
+import { episodesToArrays, subscribersToArrays, formatShowID } from "../../utils/setDisplayData";
 
 
 const initialState = {
@@ -37,12 +37,13 @@ export const entitiesReducer = (state = initialState, action) => {
 
             const episodesArrays = episodesToArrays(payload);
             
-            let episodesOptions = [];
-            for (let ep of payload) {
+            const episodesOptions = [];
+            for (let cnt=0; cnt<payload.length; cnt++) {
+                let { episode_ID, title } = payload[cnt];
                 episodesOptions.push(
                     {
-                        value: ep.episode_ID,
-                        text: `${ep.episode_ID}, ${ep.title}`
+                        value: episode_ID,
+                        text: `${episode_ID}, ${title}`
                     }
                 )
             };
@@ -60,10 +61,10 @@ export const entitiesReducer = (state = initialState, action) => {
             const hostsOptions = [];
             for (let cnt=0; cnt<payload.length; cnt++) {
                 let { host_ID, first_name, last_name, email_address, phone_number, show_ID } = payload[cnt];
-                hostsArrays.push([host_ID, first_name, last_name, email_address, phone_number, JSON.stringify(show_ID === null ? [show_ID] : show_ID.length > 1 ? show_ID : [show_ID])]);
+                hostsArrays.push([host_ID, first_name, last_name, email_address, phone_number, formatShowID(show_ID)]);
                 hostsOptions.push({
-                    text: `${payload[cnt].host_ID}, ${payload[cnt].first_name} ${payload[cnt].last_name}`,
-                    value: payload[cnt].host_ID
+                    text: `${host_ID}, ${first_name} ${last_name}`,
+                    value: host_ID
                 })
             }
 
@@ -77,34 +78,39 @@ export const entitiesReducer = (state = initialState, action) => {
         case "LOAD_PRODUCERS":
 
             let producersArrays = []
+            let producersOptions = []
             for (let cnt=0; cnt<payload.length; cnt++) {
                 let { producer_ID, show_ID, first_name, last_name, email_address, phone_number } = payload[cnt];
                 producersArrays.push([producer_ID, first_name, last_name, email_address, phone_number, show_ID]);
+                producersOptions.push(
+                    {
+                        value: producer_ID,
+                        text: `${producer_ID}, ${first_name} ${last_name}`
+                    }
+                )
             };
             
             return {
                 ...state,
                 producersData: payload,
-                producersDisplayData: producersArrays
+                producersDisplayData: producersArrays,
+                producersOptions: producersOptions
             };
 
         case "LOAD_SHOWS":
 
-            let showsArrays = []
+            const showsArrays = []
+            const showsOptions = []
             for (let cnt=0; cnt<payload.length; cnt++) {
                 let { show_ID, title } = payload[cnt];
                 showsArrays.push([show_ID, title])
-            };
-
-            let showsOptions = [];
-            for (let show of payload) {
                 showsOptions.push(
                     {
-                        value: show.show_ID,
-                        text: `${show.show_ID}, ${show.title}`
+                        value: show_ID,
+                        text: `${show_ID}, ${title}` 
                     }
                 )
-            }
+            };
             
             return {
                 ...state,
@@ -115,7 +121,7 @@ export const entitiesReducer = (state = initialState, action) => {
 
         case "LOAD_STREAMS":
 
-            let streamsArrays = []
+            const streamsArrays = []
             for (let cnt=0; cnt<payload.length; cnt++) {
                 let { stream_ID, subscriber_ID, episode_ID, time_streamed } = payload[cnt];
                 // console.log(stream_ID, subscriber_ID, episode_ID, time_streamed)
@@ -130,19 +136,15 @@ export const entitiesReducer = (state = initialState, action) => {
 
         case "LOAD_SUBSCRIBERS":
 
-            let subscribersArrays = []
+            const subscribersArrays = subscribersToArrays(payload);
+            const subscribersOptions = []
             for (let cnt=0; cnt<payload.length; cnt++) {
-                let { subscriber_ID, first_name, last_name, email_address, phone_number, age, gender, show_ID } = payload[cnt];
+                let { subscriber_ID, first_name, last_name } = payload[cnt];
                 // console.log(subscriber_ID, first_name, last_name, email_address, phone_number, age, gender, show_ID)
-                subscribersArrays.push([subscriber_ID, first_name, last_name, email_address, phone_number, age, gender, show_ID === null ? [show_ID] : show_ID.length > 1 ? show_ID : [show_ID]]);
-            };
-
-            let subscribersOptions = [];
-            for (let sub of payload) {
                 subscribersOptions.push(
                     {
-                        value: sub.subscriber_ID,
-                        text: `${sub.subscriber_ID}, ${sub.first_name} ${sub.last_name}`
+                        value: subscriber_ID,
+                        text: `${subscriber_ID}, ${first_name} ${last_name}`
                     }
                 )
             };

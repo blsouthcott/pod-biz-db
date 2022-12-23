@@ -1,15 +1,28 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Table from '../Table';
 import Form from '../Form';
-import { getDeleteEntityFn, createEntity, getShowsAsOptions, updateEntityData } from '../../utils/entityData';
+import { getDeleteEntityFn, createEntity, updateEntityData } from '../../utils/entityData';
 import * as formConstants from '../../constants/form_strings';
-import { getEntityData } from '../../utils/entityData';
-import { backendURL } from '../../constants/backendURL';
 import RespModal from '../Modal';
 import Accordion from '../Accordion';
+import { loadProducers, loadAllEntityData } from '../../store/actions/entitiesActions';
+
 
 
 export default function Producers () {
+
+    const dispatch = useDispatch();
+
+    const initialDataLoaded = useSelector(state => state.entityData.initialDataLoaded);
+    if (!initialDataLoaded) {
+        dispatch(loadAllEntityData());
+    };
+
+    const producersData = useSelector(state => state.entityData.producersData);
+    const producersDisplaydata = useSelector(state => state.entityData.producersDisplayData);
+    const producersOptions = useSelector(state => state.entityData.producersOptions);
+    const showsOptions = useSelector(state => state.entityData.showsOptions);
 
     // ****************
     // Load data to be displayed in producers table
@@ -23,26 +36,6 @@ export default function Producers () {
         'Phone Number',
         'Show ID'
     ]
-
-    const [producers, setProducers] = useState([]);
-    const loadProducers = async () => {
-        // get producers data from CS340 MySQL database
-        let producersData = await getEntityData('producers');
-        // transform json into ordered data
-        let producersAsArrays = []
-        for (let cnt=0; cnt<producersData.length; cnt++) {
-            let { producer_ID, show_ID, first_name, last_name, email_address, phone_number } = producersData[cnt];
-            producersAsArrays.push([producer_ID, first_name, last_name, email_address, phone_number, show_ID]);
-        }
-        setProducers(producersAsArrays);
-    }
-
-    // load shows to be displayed as options for which show a producer works on
-    const [shows, setShows] = useState([]);
-    const loadShowsOptions = async () => {
-        const showsAsOptions = await getShowsAsOptions(false); // pass false to get an empty first option since it's a single select
-        setShows(showsAsOptions);
-    }
 
     // ****************
     // Define add new producer form
@@ -65,7 +58,7 @@ export default function Producers () {
             for (let fn of [setNewProducerFirstName, setNewProducerLastName, setNewProducerEmail, setNewProducerPhone, setNewProducerShowID]) {
                 fn('');
             };
-            await loadProducers();
+            dispatch(loadProducers());
         } else {
             setRespModalMsg(`Unable to add new producer to the database. Error status: ${respStatus}. Please try again later.`);
         };
@@ -96,7 +89,7 @@ export default function Producers () {
             id: 'new-producer-show-id',
             value: newProducerShowID,
             onChange: e => setNewProducerShowID(e.target.value),
-            options: shows,
+            options: [...[{}], ...showsOptions],
             labelText: 'Show ID: ',
             inputIsRequired: false
         },
@@ -147,8 +140,8 @@ export default function Producers () {
         setProducerToUpdateShowID([]);
         if (e.target.value) {
             let producer;
-            for (let p of producers) {
-                if (p[0] == e.target.value) {
+            for (let p of producersData) {
+                if (p.producer_ID == e.target.value) {
                     producer = p;
                 }
             };
@@ -156,11 +149,11 @@ export default function Producers () {
                 alert(`no Producer associated with ID: ${e.target.value} was found in the database!`)
             } else {
                 // set input field values based on episode data return by search
-                setProducerToUpdateFirstName(producer[1]);
-                setProducerToUpdateLastName(producer[2]);
-                setProducerToUpdateEmail(producer[3]);
-                setProducerToUpdatePhone(producer[4]);
-                setProducerToUpdateShowID(producer[5]);
+                setProducerToUpdateFirstName(producer.first_name);
+                setProducerToUpdateLastName(producer.last_name);
+                setProducerToUpdateEmail(producer.email_address);
+                setProducerToUpdatePhone(producer.phone_number);
+                setProducerToUpdateShowID(producer.show_ID);
             };
         }
     }
@@ -176,7 +169,7 @@ export default function Producers () {
             for (let fn of [setProducerToUpdateID, setProducerToUpdateFirstName, setProducerToUpdateLastName, setProducerToUpdateEmail, setProducerToUpdatePhone, setProducerToUpdateShowID]) {
                 fn('');
             };
-            await loadProducers();
+            dispatch(loadProducers());
         } else {
             setRespModalMsg(`Unable to update producer in the database. Error status: ${respStatus}. Please try again later`);
         };
@@ -190,12 +183,7 @@ export default function Producers () {
             multiple: false,
             value: producerToUpdateID,
             onChange: e => fillProducerToUpdateData(e),
-            options: [...[{}], ...producers.map((producer) => {
-                return {
-                    text: `${producer[0]}, ${producer[1]} ${producer[2]}`,
-                    value: producer[0]
-                };
-            })],
+            options: [...[{}], ...producersOptions],
             labelText: formConstants.REQUIRED_FIELD_INDICATOR + 'Producer ID: ' + formConstants.AUTO_FILL_UPDATE_FORM_INSTR,
             inputIsRequired: true
         },
@@ -223,7 +211,7 @@ export default function Producers () {
             multiple: false,
             value: producerToUpdateShowID,
             onChange: e => setProducerToUpdateShowID(e.target.value),
-            options: shows,
+            options: [...[{}], ...showsOptions],
             labelText: 'Produced Show:',
             inputIsRequired: false
         },
@@ -257,21 +245,27 @@ export default function Producers () {
     const [respModalIsOpen, setRespModalIsOpen] = useState(false);
     const [respModalMsg, setRespModalMsg] = useState('');
 
-    const deleteProducer = getDeleteEntityFn('Producers', loadProducers, setRespModalIsOpen, setRespModalMsg);
+    const deleteProducer = getDeleteEntityFn(
+        'Producers', 
+        dispatch,
+        loadProducers, 
+        setRespModalIsOpen, 
+        setRespModalMsg
+    );
 
-    useEffect(() => {
-        loadProducers()
-    },
-    []);
+    // useEffect(() => {
+    //     loadProducers()
+    // },
+    // []);
     
-    useEffect(() => {
-        loadShowsOptions()
-    },
-    []);    
+    // useEffect(() => {
+    //     loadShowsOptions()
+    // },
+    // []);    
 
     return (
         <div>
-            <Table tableTitle={ tableTitle } tableHeaders={ tableHeaders } data={ producers } onDelete={ deleteProducer } setEntityFn={ loadProducers }/>
+            <Table tableTitle={ tableTitle } tableHeaders={ tableHeaders } data={ producersDisplaydata } onDelete={ deleteProducer } setEntityFn={ loadProducers }/>
             <Accordion
                 title={'Add New Producer'}
                 content={

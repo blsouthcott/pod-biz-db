@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Form from '../Form';
 import Table from '../Table';
 import { createEntity, getDeleteEntityFn, getEntityData, getEpisodesAsOptions, getSubscribersAsOptions } from '../../utils/entityData';
@@ -6,9 +7,22 @@ import * as formConstants from '../../constants/form_strings';
 import { backendURL } from '../../constants/backendURL';
 import RespModal from '../Modal';
 import Accordion from '../Accordion';
+import { loadStreams, loadAllEntityData } from '../../store/actions/entitiesActions';
 
 
 export default function Streams () {
+
+    const dispatch = useDispatch();
+
+    const initialDataLoaded = useSelector(state => state.entityData.initialDataLoaded);
+    if (!initialDataLoaded) {
+        dispatch(loadAllEntityData());
+    };
+
+    const streamsData = useSelector(state => state.entityData.streamsData);
+    const streamsDisplayData = useSelector(state => state.entityData.streamsDisplayData);
+    const episodesOptions = useSelector(state => state.entityData.episodesOptions);
+    const subscribersOptions = useSelector(state => state.entityData.subscribersOptions);
 
     // ****************
     // Load data to be displayed in shows table
@@ -20,34 +34,6 @@ export default function Streams () {
         'Episode ID',
         'Time Streamed'
     ]
-
-    const [streams, setStreams] = useState([]);
-    const loadStreams = async () => {
-        // get streams data from mysql db
-        let streamsData = await getEntityData('streams');
-        // transform data into ordered array
-        let streamsAsArrays = []
-        for (let cnt=0; cnt<streamsData.length; cnt++) {
-            let { stream_ID, subscriber_ID, episode_ID, time_streamed } = streamsData[cnt];
-            console.log(stream_ID, subscriber_ID, episode_ID, time_streamed)
-            streamsAsArrays.push([stream_ID, subscriber_ID, episode_ID, time_streamed])
-        }
-        setStreams(streamsAsArrays);
-    }
-
-    // load options for subscribers that may have streamed an episdoe
-    const [subscribersOptions, setSubscribersOptions] = useState([]);
-    const loadSubscribersOptions = async () => {
-        const subscribersAsOptions = await getSubscribersAsOptions();
-        setSubscribersOptions(subscribersAsOptions);
-    }
-
-    // load options of episodes that may have been streamed
-    const [episodesOptions, setEpisodesOptions] = useState([]);
-    const loadEpisodesOptions = async () => {
-        const episodesAsOptions = await getEpisodesAsOptions();
-        setEpisodesOptions(episodesAsOptions);
-    }
 
     // ****************
     // Define add new stream form
@@ -66,7 +52,7 @@ export default function Streams () {
             for (let fn of [setNewStreamSubscriberID, setNewStreamTimeStreamed, setNewStreamEpisodeID]) {
                 fn('');
             }
-            await loadStreams();
+            dispatch(loadStreams());
         } else {
             setRespModalMsg(`Unable to add new stream to the database. Error status: ${respStatus}. Please try again later.`);
         };  
@@ -79,7 +65,7 @@ export default function Streams () {
             id: 'new-stream-subscriber-id',
             value: newStreamSubscriberID,
             onChange: e => setNewStreamSubscriberID(e.target.value),
-            options: subscribersOptions,
+            options: [...[{}], ...subscribersOptions],
             labelText: formConstants.REQUIRED_FIELD_INDICATOR + 'Subscriber ID: ',
             inputIsRequired: true
         },
@@ -88,7 +74,7 @@ export default function Streams () {
             id: 'new-stream-episode-id',
             value: newStreamEpisodeID,
             onChange: e => setNewStreamEpisodeID(e.target.value),
-            options: episodesOptions,
+            options: [...[{}], ...episodesOptions],
             labelText: formConstants.REQUIRED_FIELD_INDICATOR + 'Episode ID: ',
             inputIsRequired: true
         },
@@ -111,26 +97,32 @@ export default function Streams () {
     const [respModalIsOpen, setRespModalIsOpen] = useState(false);
     const [respModalMsg, setRespModalMsg] = useState('');
 
-    const deleteStream = getDeleteEntityFn('Streams', loadStreams, setRespModalIsOpen, setRespModalMsg);
+    const deleteStream = getDeleteEntityFn(
+        'Streams', 
+        dispatch,
+        loadStreams, 
+        setRespModalIsOpen, 
+        setRespModalMsg
+    );
 
-    useEffect(() => {
-        loadStreams()
-    },
-    []);
+    // useEffect(() => {
+    //     loadStreams()
+    // },
+    // []);
 
-    useEffect(() => {
-        loadSubscribersOptions()
-    },
-    []);    
+    // useEffect(() => {
+    //     loadSubscribersOptions()
+    // },
+    // []);    
 
-    useEffect(() => {
-        loadEpisodesOptions()
-    },
-    []); 
+    // useEffect(() => {
+    //     loadEpisodesOptions()
+    // },
+    // []); 
 
     return (
         <div>
-            <Table tableTitle={ tableTitle } tableHeaders={ tableHeaders } data={ streams } onDelete={ deleteStream } setEntityFn={ loadStreams }/>
+            <Table tableTitle={ tableTitle } tableHeaders={ tableHeaders } data={ streamsDisplayData } onDelete={ deleteStream } setEntityFn={ loadStreams }/>
             <Accordion
                 title={'Add New Stream'}
                 content={
