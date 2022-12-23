@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Table from '../Table';
 import Form from '../Form';
-import { createEntity, getDeleteEntityFn, getEntityData, updateEntityData, getShowsAsOptions } from '../../utils/entityData';
+import { createEntity, getDeleteEntityFn, updateEntityData } from '../../utils/entityData';
 import { updateSelectedVals } from '../../utils/selectMultiple';
 import * as formConstants from '../../constants/form_strings';
 import { backendURL } from '../../constants/backendURL';
