@@ -21,10 +21,6 @@ const customStyles = {
 
 export default function RespModal ({ modalIsOpen, setModalIsOpenFn, modalMsg }) {
 
-    const setModalIsOpenToFalse = () => {
-        setModalIsOpenFn(false);
-    };
-
     return (
         <div className='resp-modal'>
             <Modal
@@ -32,8 +28,27 @@ export default function RespModal ({ modalIsOpen, setModalIsOpenFn, modalMsg }) 
               appElement={ document.getElementById('root') }
               style={ customStyles } >
                 <p>{ modalMsg }</p>
-                <button onClick={ setModalIsOpenToFalse }>OK</button>
+                <button onClick={ () => setModalIsOpenFn(false) }>OK</button>
             </Modal>
         </div>
     )
 }
+
+
+export function ConfirmModal ({ modalIsOpen, setModalIsOpenFn, onYes, id }) {
+
+    return (
+        <div className='resp-modal'>
+            <Modal
+              isOpen={ modalIsOpen }
+              appElement={ document.getElementById('root') }
+              style={ customStyles } >
+                <p>{ `Are you sure you want to delete ${id}?` }</p>
+                <button onClick={ () => { onYes(id); setModalIsOpenFn(false); }}>Yes</button>
+                <br></br>
+                <button onClick={ () => setModalIsOpenFn(false) }>Cancel</button>
+            </Modal>
+        </div>
+    )
+
+} 
