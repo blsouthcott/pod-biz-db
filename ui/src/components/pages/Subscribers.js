@@ -10,7 +10,7 @@ import { backendURL } from '../../constants/backendURL';
 import Accordion from '../Accordion';
 import RespModal from '../Modal';
 import { loadSubscribers, loadAllEntityData } from '../../store/actions/entitiesActions';
-import { formatShowID, subscribersToArrays } from '../../utils/setDisplayData';
+import { formatShowIDs, subscribersToArrays } from '../../utils/setDisplayData';
 
 export default function Subscribers () {
 
@@ -289,7 +289,7 @@ export default function Subscribers () {
                 setSubscriberToUpdatePhone(subscriber.phone_number);
                 setSubscriberToUpdateAge(subscriber.age);
                 setSubscriberToUpdateGender(subscriber.gender);
-                setSubscriberToUpdateSubscribedShowIDs(formatShowID(subscriber.show_ID, {toStr: false}));
+                setSubscriberToUpdateSubscribedShowIDs(formatShowIDs(subscriber.show_ID, {toStr: false}));
             };
         }
     }   

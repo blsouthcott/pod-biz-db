@@ -20,16 +20,28 @@ export const loadAllEntityData = () => {
             getEntityData('streams'),
             getEntityData('subscribers'),
         ])
-        dispatch(episodesLoaded(episodes));
-        dispatch(hostsLoaded(hosts));
-        dispatch(producersLoaded(producers));
+        dispatch(episodesLoaded({
+            episodesData: episodes,
+            showsData: shows}
+        ));
+        dispatch(hostsLoaded({
+            hostsData: hosts,
+            showsData: shows
+        }));
+        dispatch(producersLoaded({
+            producersData: producers,
+            showsData: shows
+        }));
         dispatch(showsLoaded(shows));
         dispatch(streamsLoaded({
             streamsData: streams,
             episodesData: episodes,
             subscribersData: subscribers
         }));
-        dispatch(subscribersLoaded(subscribers));
+        dispatch(subscribersLoaded({
+            subscribersData: subscribers,
+            showsData: shows
+        }));
         dispatch(initialDataLoaded());
     };
 }
@@ -53,8 +65,17 @@ export const episodesLoaded = (data) => {
 
 export const loadEpisodes = () => {
     return async function (dispatch) {
-        const episodesData = await getEntityData('episodes');
-        dispatch(episodesLoaded(episodesData));
+        const [
+            episodes,
+            shows
+         ] = await Promise.all([
+            getEntityData('episodes'),
+            getEntityData('shows')
+         ]);
+        dispatch(episodesLoaded({
+            episodesData: episodes,
+            showsData: shows
+        }));
     };
 }
 
@@ -69,8 +90,17 @@ export const hostsLoaded = (data) => {
 
 export const loadHosts = () => {
     return async function (dispatch) {
-        const hostsData = await getEntityData('hosts');
-        dispatch(hostsLoaded(hostsData));
+        const [
+            hosts,
+            shows
+        ] = await Promise.all([
+            getEntityData('hosts'),
+            getEntityData('shows')
+         ])
+        dispatch(hostsLoaded({
+            hostsData: hosts,
+            showsData: shows
+        }));
     };
 }
 
@@ -85,8 +115,17 @@ export const producersLoaded = (data) => {
 
 export const loadProducers = () => {
     return async function (dispatch) {
-        const producersData = await getEntityData('producers');
-        dispatch(producersLoaded(producersData));
+        const [
+            producers,
+            shows
+        ] = await Promise.all([
+            getEntityData('producers'),
+            getEntityData('shows')
+        ]);
+        dispatch(producersLoaded({
+            producersData: producers,
+            showsData: shows
+        }));
     }
 }
 
@@ -145,7 +184,16 @@ export const subscribersLoaded = (data) => {
 
 export const loadSubscribers = () => {
     return async function (dispatch) {
-        const subscribersData = await getEntityData('subscribers');
-        dispatch(subscribersLoaded(subscribersData));
+        const [
+            subscribers,
+            shows
+         ] = await Promise.all([
+            getEntityData('subscribers'),
+            getEntityData('shows')
+         ])
+        dispatch(subscribersLoaded({
+            subscribersData: subscribers,
+            showsData: shows}
+        ));
     };
 }

@@ -9,7 +9,7 @@ import * as formConstants from '../../constants/form_strings';
 import RespModal from '../Modal';
 import Accordion from '../Accordion';
 import { loadHosts, loadAllEntityData } from '../../store/actions/entitiesActions';
-import { formatShowID } from '../../utils/setDisplayData';
+import { formatShowIDs } from '../../utils/setDisplayData';
 
 
 export default function Hosts () {
@@ -158,7 +158,7 @@ export default function Hosts () {
                 setHostToUpdateLastName(host.last_name);
                 setHostToUpdateEmail(host.email_address);
                 setHostToUpdatePhone(host.phone_number);
-                setHostToUpdateShowIDs(formatShowID(host.show_ID, {toStr: false}));
+                setHostToUpdateShowIDs(formatShowIDs(host.show_ID, {toStr: false}));
             };
         }
     }
