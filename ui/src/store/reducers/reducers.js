@@ -120,12 +120,27 @@ export const entitiesReducer = (state = initialState, action) => {
             };
 
         case "LOAD_STREAMS":
+            
+            const streams = payload.streamsData;
+            const episodesObj = {}
+            for (let episode of payload.episodesData) {
+                episodesObj[episode.episode_ID] = episode;
+            }
+            console.log('episodesObj: ', episodesObj)
+
+            const subscribersObj = {}
+            for (let subscriber of payload.subscribersData) {
+                subscribersObj[subscriber.subscriber_ID] = subscriber;
+            }
+            console.log('subscribersObj: ', subscribersObj)
 
             const streamsArrays = []
-            for (let cnt=0; cnt<payload.length; cnt++) {
-                let { stream_ID, subscriber_ID, episode_ID, time_streamed } = payload[cnt];
+            for (let cnt=0; cnt<streams.length; cnt++) {
+                let { stream_ID, subscriber_ID, episode_ID, time_streamed } = streams[cnt];
                 // console.log(stream_ID, subscriber_ID, episode_ID, time_streamed)
-                streamsArrays.push([stream_ID, subscriber_ID, episode_ID, time_streamed])
+                let subscriberInfo = `(${subscriber_ID}) ${subscribersObj[subscriber_ID].first_name} ${subscribersObj[subscriber_ID].last_name}`
+                let episodeInfo = `(${episode_ID}) ${episodesObj[episode_ID].title}`
+                streamsArrays.push([stream_ID, subscriberInfo, episodeInfo, time_streamed])
             };
             
             return {

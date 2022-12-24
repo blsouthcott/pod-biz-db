@@ -29,8 +29,8 @@ export default function Streams () {
     const tableTitle = 'Streams';
     const tableHeaders = [
         'ID',
-        'Subscriber ID',
-        'Episode ID',
+        'Subscriber',
+        'Episode',
         'Time Streamed'
     ]
 

@@ -24,7 +24,11 @@ export const loadAllEntityData = () => {
         dispatch(hostsLoaded(hosts));
         dispatch(producersLoaded(producers));
         dispatch(showsLoaded(shows));
-        dispatch(streamsLoaded(streams));
+        dispatch(streamsLoaded({
+            streamsData: streams,
+            episodesData: episodes,
+            subscribersData: subscribers
+        }));
         dispatch(subscribersLoaded(subscribers));
         dispatch(initialDataLoaded());
     };
@@ -113,8 +117,20 @@ export const streamsLoaded = (data) => {
 
 export const loadStreams = () => {
     return async function (dispatch) {
-        const streamsData = await getEntityData('streams');
-        dispatch(streamsLoaded(streamsData));
+        const [
+            streams, 
+            episodes, 
+            subscribers
+        ] = await Promise.all([
+            getEntityData('streams'),
+            getEntityData('episodes'),
+            getEntityData('subscribers')
+        ])
+        dispatch(streamsLoaded({
+            streamsData: streams,
+            episodesData: episodes,
+            subscribersData: subscribers
+        }));
     };
 }
 
