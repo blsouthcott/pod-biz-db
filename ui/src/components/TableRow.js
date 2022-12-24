@@ -10,15 +10,22 @@ function TableRow ({ data, onDelete, allowDeletion=true, setEntityFn }) {
     
     return (
             <tr>
-            <ConfirmModal 
-                modalIsOpen={ confirmModalIsOpen } 
-                setModalIsOpenFn={ setConfirmModalIsOpen }
-                onYes={ onDelete }
-                id={ rowID }
-                >
-                </ConfirmModal>
                 {data.map((d, i) => <TableCell cellData={d} key={i}/>)}
-                {allowDeletion === true && <td><button onClick={ () => { setRowID(data[0]); setConfirmModalIsOpen(true); }} >Delete</button></td>}
+                {allowDeletion === true && 
+                    <td>
+                        <button 
+                            onClick={ () => { setRowID(data[0]); setConfirmModalIsOpen(true); }} 
+                            >Delete
+                        </button>
+                        <ConfirmModal 
+                        modalIsOpen={ confirmModalIsOpen } 
+                        setModalIsOpenFn={ setConfirmModalIsOpen }
+                        onYes={ onDelete }
+                        id={ rowID }
+                        >
+                        </ConfirmModal>
+                    </td>
+                }
             </tr>
     )
 }

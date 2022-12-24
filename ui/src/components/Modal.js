@@ -43,9 +43,9 @@ export function ConfirmModal ({ modalIsOpen, setModalIsOpenFn, onYes, id }) {
               isOpen={ modalIsOpen }
               appElement={ document.getElementById('root') }
               style={ customStyles } >
-                <p>{ `Are you sure you want to delete ${id}?` }</p>
+                <p>{ `Are you sure you want to delete row with ID: ${id}, from the database?` }</p>
                 <button onClick={ () => { onYes(id); setModalIsOpenFn(false); }}>Yes</button>
-                <br></br>
+                &nbsp;&nbsp;
                 <button onClick={ () => setModalIsOpenFn(false) }>Cancel</button>
             </Modal>
         </div>

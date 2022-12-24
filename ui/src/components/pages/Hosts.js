@@ -271,7 +271,7 @@ export default function Hosts () {
 
     return (
         <div>
-            <Table tableTitle={ tableTitle } tableHeaders={ tableHeaders } data={ hostsDisplayData } onDelete={ deleteHost } allowDeletion={false}/>
+            <Table tableTitle={ tableTitle } tableHeaders={ tableHeaders } data={ hostsDisplayData } onDelete={ deleteHost } allowDeletion={ true }/>
             <Accordion
                 title={'Add New Host'}
                 content={
