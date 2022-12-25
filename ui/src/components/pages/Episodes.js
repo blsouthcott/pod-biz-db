@@ -248,7 +248,7 @@ export default function Episodes () {
             placeholder: 'Episode ID',
             onChange: e => fillEpisodeToUpdateData(e),
             options: [...[{}], ...episodesOptions],
-            labelText: formConstants.REQUIRED_FIELD_INDICATOR + 'Episode ID: ' + formConstants.AUTO_FILL_UPDATE_FORM_INSTR,
+            labelText: formConstants.REQUIRED_FIELD_INDICATOR + 'Episode ID: ',
             inputIsRequired: true
         },
         {
