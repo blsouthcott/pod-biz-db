@@ -9,7 +9,7 @@ import * as formConstants from '../../constants/form_strings';
 import RespModal from '../Modal';
 import Accordion from '../Accordion';
 import { loadHosts, loadAllEntityData } from '../../store/actions/entitiesActions';
-import { formatShowIDs } from '../../utils/setDisplayData';
+import { formatShowIDs } from '../../utils/displayDataUtils';
 
 
 export default function Hosts () {

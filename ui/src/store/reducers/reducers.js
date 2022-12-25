@@ -1,5 +1,5 @@
 
-import { episodesToArrays, subscribersToArrays, formatShowIDs, formatShowIDsDisplayData, dataToObj } from "../../utils/setDisplayData";
+import { episodesToArrays, subscribersToArrays, formatShowIDs, formatShowIDsDisplayData, dataToObj } from "../../utils/displayDataUtils";
 
 
 const initialState = {
@@ -42,7 +42,7 @@ export const entitiesReducer = (state = initialState, action) => {
             const episodesArrays = episodesToArrays(episodes, showsObj);
             
             const episodesOptions = [];
-            for (let cnt=0; cnt<payload.length; cnt++) {
+            for (let cnt=0; cnt<episodes.length; cnt++) {
                 let { episode_ID, title } = episodes[cnt];
                 episodesOptions.push(
                     {
@@ -151,7 +151,6 @@ export const entitiesReducer = (state = initialState, action) => {
             const streamsArrays = []
             for (let cnt=0; cnt<streams.length; cnt++) {
                 let { stream_ID, subscriber_ID, episode_ID, time_streamed } = streams[cnt];
-                // console.log(stream_ID, subscriber_ID, episode_ID, time_streamed)
                 let subscriberInfo = `(${subscriber_ID}) ${subscribersObj[subscriber_ID].first_name} ${subscribersObj[subscriber_ID].last_name}`
                 let episodeInfo = `(${episode_ID}) ${episodesObj[episode_ID].title}`
                 streamsArrays.push([stream_ID, subscriberInfo, episodeInfo, time_streamed])
@@ -169,7 +168,7 @@ export const entitiesReducer = (state = initialState, action) => {
             showsObj = dataToObj(payload.showsData, 'show_ID');
             const subscribersArrays = subscribersToArrays(subscribers, showsObj);
             const subscribersOptions = []
-            for (let cnt=0; cnt<payload.length; cnt++) {
+            for (let cnt=0; cnt<subscribers.length; cnt++) {
                 let { subscriber_ID, first_name, last_name } = subscribers[cnt];
                 subscribersOptions.push(
                     {

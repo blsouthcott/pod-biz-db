@@ -4,20 +4,20 @@ import TableHeader from './TableHeader';
 
 
 function Table({ data, tableTitle, tableHeaders, onDelete, allowDeletion=true, setEntityFn }) {
-    console.log('data: ', data)
-    console.log('table headers: ', tableHeaders)
+    // console.log('data: ', data)
+    // console.log('table headers: ', tableHeaders)
     return (
         <div>
             <table>
                 <caption><h2>{ tableTitle }</h2></caption>
                 <thead>
-                    <tr>
+                    <tr id='table-header-row'>
                         {tableHeaders.map((header, i) => <TableHeader headerName={header} key={i}/>)}
                         {allowDeletion === true ? <td></td> : null}
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((d, i) => <TableRow data={d} key={i} onDelete={ onDelete } allowDeletion={ allowDeletion } setEntityFn={ setEntityFn }/>)}
+                    {data.map((d, i) => <TableRow data={d} key={i} rowNum={i} onDelete={ onDelete } allowDeletion={ allowDeletion } setEntityFn={ setEntityFn }/>)}
                 </tbody>
             </table>
         </div>

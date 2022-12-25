@@ -3,13 +3,12 @@ import TableCell from './TableCell';
 import { ConfirmModal } from './Modal';
 
 
-function TableRow ({ data, onDelete, allowDeletion=true, setEntityFn }) {
-
+function TableRow ({ data, rowNum, onDelete, allowDeletion=true, setEntityFn }) {
     const [confirmModalIsOpen, setConfirmModalIsOpen] = useState(false);
     const [rowID, setRowID] = useState('');
     
     return (
-            <tr>
+            <tr id={`table-row-${rowNum}`}>
                 {data.map((d, i) => <TableCell cellData={d} key={i}/>)}
                 {allowDeletion === true && 
                     <td>

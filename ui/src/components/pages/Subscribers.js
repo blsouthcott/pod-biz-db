@@ -10,7 +10,7 @@ import { backendURL } from '../../constants/backendURL';
 import Accordion from '../Accordion';
 import RespModal from '../Modal';
 import { loadSubscribers, loadAllEntityData } from '../../store/actions/entitiesActions';
-import { formatShowIDs, subscribersToArrays } from '../../utils/setDisplayData';
+import { formatShowIDs, subscribersToArrays } from '../../utils/displayDataUtils';
 
 export default function Subscribers () {
 
@@ -48,6 +48,8 @@ export default function Subscribers () {
         setSubscriberSearchFirstName('');
         setSubscriberSearchLastName('');
         setDisplaySearched(false);
+        const tableHeader = document.getElementById('table-header-row');
+        tableHeader.scrollIntoView();
     };
 
     // ****************
