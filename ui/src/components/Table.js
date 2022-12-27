@@ -1,6 +1,5 @@
 import React from 'react';
 import TableRow from './TableRow';
-import TableHeader from './TableHeader';
 
 
 function Table({ data, tableTitle, tableHeaders, onDelete, allowDeletion=true, setEntityFn }) {
@@ -12,8 +11,8 @@ function Table({ data, tableTitle, tableHeaders, onDelete, allowDeletion=true, s
                 <caption><h2>{ tableTitle }</h2></caption>
                 <thead>
                     <tr id='table-header-row'>
-                        {tableHeaders.map((header, i) => <TableHeader headerName={header} key={i}/>)}
-                        {allowDeletion === true ? <td></td> : null}
+                        {tableHeaders.map((header, i) => <th key={i}>{header}</th>)}
+                        {allowDeletion === true ? <th></th> : null}
                     </tr>
                 </thead>
                 <tbody>

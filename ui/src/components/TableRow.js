@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
-import TableCell from './TableCell';
 import { ConfirmModal } from './Modal';
 
 
-function TableRow ({ data, rowNum, onDelete, allowDeletion=true, setEntityFn }) {
+function TableRow ({ data, rowNum, onDelete, allowDeletion=true }) {
     const [confirmModalIsOpen, setConfirmModalIsOpen] = useState(false);
     const [rowID, setRowID] = useState('');
     
     return (
             <tr id={`table-row-${rowNum}`}>
-                {data.map((d, i) => <TableCell cellData={d} key={i}/>)}
+                {data.map((d, i) => <td key={i}>{d}</td>)}
                 {allowDeletion === true && 
                     <td>
                         <button 
