@@ -13,6 +13,7 @@ import { loadSubscribers, loadAllEntityData } from '../../store/actions/entities
 import { formatShowIDs, subscribersToArrays } from '../../utils/displayDataUtils';
 
 export default function Subscribers () {
+    console.log('Rendering Subscribers component...')
 
     const dispatch = useDispatch();
 

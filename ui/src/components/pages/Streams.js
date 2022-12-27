@@ -10,6 +10,7 @@ import { loadStreams, loadAllEntityData } from '../../store/actions/entitiesActi
 
 
 export default function Streams () {
+    console.log('Rendering Streams component...')
 
     const dispatch = useDispatch();
 

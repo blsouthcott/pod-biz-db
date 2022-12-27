@@ -4,8 +4,8 @@ function Input ({ type, id, value, placeholder, onChange, onBlur, labelText, inp
     // console.log('onBlur is: ' + onBlur);
     return (
 
-        <div>
-            <label for={ id }>{ labelText }</label>
+        <React.Fragment>
+            <label htmlFor={ id }>{ labelText }</label>
             {/* render the input based on whether it's a required input or not */}
             {inputIsRequired === true ?
                 <input
@@ -22,8 +22,7 @@ function Input ({ type, id, value, placeholder, onChange, onBlur, labelText, inp
                     onChange={ onChange }
                     onBlur={ onBlur !== undefined ? onBlur : null }/>
             }
-            
-        </div>
+        </React.Fragment>
     )
 }
 

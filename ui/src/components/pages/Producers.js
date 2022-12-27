@@ -11,6 +11,7 @@ import { loadProducers, loadAllEntityData } from '../../store/actions/entitiesAc
 
 
 export default function Producers () {
+    console.log('Rendering Producers component...')
 
     const dispatch = useDispatch();
 

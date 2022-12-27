@@ -13,6 +13,7 @@ import { formatShowIDs } from '../../utils/displayDataUtils';
 
 
 export default function Hosts () {
+    console.log('Rendering Hosts component...')
 
     const dispatch = useDispatch();
 

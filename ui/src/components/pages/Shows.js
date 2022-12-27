@@ -6,11 +6,11 @@ import { createEntity, getDeleteEntityFn } from '../../utils/entityData';
 import * as formConstants from '../../constants/form_strings';
 import RespModal from '../Modal';
 import Accordion from '../Accordion';
-
-import { showsLoaded, loadAllEntityData, loadShows } from '../../store/actions/entitiesActions';
+import { loadAllEntityData, loadShows } from '../../store/actions/entitiesActions';
 
 
 export default function Shows () {
+    console.log('Rendering Shows component...')
 
     const dispatch = useDispatch();
     const initialDataLoaded = useSelector(state => state.entityData.initialDataLoaded);

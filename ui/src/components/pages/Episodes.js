@@ -14,6 +14,7 @@ import { scrollToNewRow, scrollToTopOfTable, scrollToUpdatedRow } from '../../ut
 
 
 export default function Episodes () {
+    console.log('Rendering Episodes component...')
 
     const dispatch = useDispatch();
     
