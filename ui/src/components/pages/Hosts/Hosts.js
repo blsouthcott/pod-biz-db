@@ -1,15 +1,15 @@
 
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import Table from '../Table';
-import Form from '../Form';
-import { createEntity, getDeleteEntityFn, updateEntityData } from '../../utils/entityData';
-import { updateSelectedVals } from '../../utils/selectMultiple';
-import * as formConstants from '../../constants/form_strings';
-import RespModal from '../Modal';
-import Accordion from '../Accordion';
-import { loadHosts, loadAllEntityData } from '../../store/actions/entitiesActions';
-import { formatShowIDs } from '../../utils/displayDataUtils';
+import Table from '../../Table';
+import Form from '../../Form';
+import { createEntity, getDeleteEntityFn, updateEntityData } from '../../../utils/entityData';
+import { updateSelectedVals } from '../../../utils/selectMultiple';
+import * as formConstants from '../../../constants/form_strings';
+import RespModal from '../../Modal';
+import Accordion from '../../Accordion';
+import { loadHosts, loadAllEntityData } from '../../../store/actions/entitiesActions';
+import { formatShowIDs } from '../../../utils/displayDataUtils';
 
 
 export default function Hosts () {

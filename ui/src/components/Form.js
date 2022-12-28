@@ -2,6 +2,7 @@ import React from 'react';
 import Input from './Input';
 import Select from './Select';
 
+// export default function Form ({ title, inputs, onSubmit }) {
 export default function Form ({ title, inputs, onSubmit }) {
     // console.log('trying to render form for: ' + title);
     return (

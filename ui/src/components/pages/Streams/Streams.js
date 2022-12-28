@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import Form from '../Form';
-import Table from '../Table';
-import { createEntity, getDeleteEntityFn } from '../../utils/entityData';
-import * as formConstants from '../../constants/form_strings';
-import RespModal from '../Modal';
-import Accordion from '../Accordion';
-import { loadStreams, loadAllEntityData } from '../../store/actions/entitiesActions';
+import Form from '../../Form';
+import Table from '../../Table';
+import { createEntity, getDeleteEntityFn } from '../../../utils/entityData';
+import * as formConstants from '../../../constants/form_strings';
+import RespModal from '../../Modal';
+import Accordion from '../../Accordion';
+import { loadStreams, loadAllEntityData } from '../../../store/actions/entitiesActions';
 
 
 export default function Streams () {

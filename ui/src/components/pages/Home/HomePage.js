@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { loadAllEntityData } from '../../store/actions/entitiesActions';
+import { loadAllEntityData } from '../../../store/actions/entitiesActions';
 import { useDispatch, useSelector } from 'react-redux';
 
 export default function HomePage () {

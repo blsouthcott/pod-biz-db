@@ -84,21 +84,33 @@ input[type=submit]:hover, .reset-table:hover {
     background-color: grey;
 }
 
-table, td, th {  
-    border: 1px solid #ccc;
-    text-align: left;
-    border-radius: 5px;
+.table-scrollable {
+    overflow-y: auto;
+    height: 500px;
 }
-  
-  table {
+
+.table-scrollable thead tr {
+    position: sticky;
+    top: 0px;
+}
+
+table {
     margin: auto;
     border-collapse: collapse;
     width: 75%;
 }
-  
-  th, td {
+
+table, td, th {  
+    border: 1px solid #ccc;
+    text-align: left;
+    /* border-radius: 5px; */
     padding: 15px;
 }
+
+th {
+    background: gainsboro;
+}
+
 
 .accordion-item {
     text-align: left;

@@ -25,9 +25,9 @@ export default function Select ({ id, value, multiple, onChange, options, labelT
     }
     
     return (
-        <div>
-            <label for={ id }>{ labelText }</label>
+        <React.Fragment>
+            <label htmlFor={ id }>{ labelText }</label>
             { renderSelect(multiple, inputIsRequired )}       
-        </div>
+        </React.Fragment>
     )
 }

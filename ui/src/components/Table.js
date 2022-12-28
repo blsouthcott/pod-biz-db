@@ -6,13 +6,13 @@ function Table({ data, tableTitle, tableHeaders, onDelete, allowDeletion=true, s
     // console.log('data: ', data)
     // console.log('table headers: ', tableHeaders)
     return (
-        <div>
+        <div className='table-scrollable'>
             <table>
                 <caption><h2>{ tableTitle }</h2></caption>
                 <thead>
                     <tr id='table-header-row'>
                         {tableHeaders.map((header, i) => <th key={i}>{header}</th>)}
-                        {allowDeletion === true ? <th></th> : null}
+                        {allowDeletion === true && <th></th>}
                     </tr>
                 </thead>
                 <tbody>

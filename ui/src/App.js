@@ -4,13 +4,13 @@ import './App.css';
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Navigation from './components/Navigation';
-import HomePage from './components/pages/HomePage';
-import Episodes from './components/pages/Episodes';
-import Hosts from './components/pages/Hosts';
-import Producers from './components/pages/Producers';
-import Shows from './components/pages/Shows';
-import Streams from './components/pages/Streams';
-import Subscribers from './components/pages/Subscribers';
+import HomePage from './components/pages/Home/HomePage';
+import Episodes from './components/pages/Episodes/EpisodesPage';
+import Hosts from './components/pages/Hosts/Hosts';
+import Producers from './components/pages/Producers/Producers';
+import Shows from './components/pages/Shows/Shows';
+import Streams from './components/pages/Streams/Streams';
+import Subscribers from './components/pages/Subscribers/Subscribers';
 
 
 function App() {

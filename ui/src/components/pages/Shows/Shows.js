@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import Table from '../Table';
-import Form from '../Form';
-import { createEntity, getDeleteEntityFn } from '../../utils/entityData';
-import * as formConstants from '../../constants/form_strings';
-import RespModal from '../Modal';
-import Accordion from '../Accordion';
-import { loadAllEntityData, loadShows } from '../../store/actions/entitiesActions';
+import Table from '../../Table';
+import Form from '../../Form';
+import { createEntity, getDeleteEntityFn } from '../../../utils/entityData';
+import * as formConstants from '../../../constants/form_strings';
+import RespModal from '../../Modal';
+import Accordion from '../../Accordion';
+import { loadAllEntityData, loadShows } from '../../../store/actions/entitiesActions';
 
 
 export default function Shows () {
