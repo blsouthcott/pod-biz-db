@@ -1,127 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import Table from '../../Table';
-import Form from '../../Form';
-import { getDeleteEntityFn, createEntity, updateEntityData } from '../../../utils/entityData';
-import * as formConstants from '../../../constants/form_strings';
-import RespModal from '../../Modal';
-import Accordion from '../../Accordion';
-import { loadProducers, loadAllEntityData } from '../../../store/actions/entitiesActions';
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { updateEntityData } from "../../../../utils/entityData";
+import { loadProducers } from "../../../../store/actions/entitiesActions";
+import * as formConstants from '../../../../constants/form_strings';
+import Form from "../../../Form";
+import RespModal from "../../../Modal";
 
 
-
-export default function Producers () {
-    console.log('Rendering Producers component...')
+export default function UpdateProducerForm () {
 
     const dispatch = useDispatch();
 
-    const initialDataLoaded = useSelector(state => state.entityData.initialDataLoaded);
-    if (!initialDataLoaded) {
-        dispatch(loadAllEntityData());
-    };
-
     const producersData = useSelector(state => state.entityData.producersData);
-    const producersDisplaydata = useSelector(state => state.entityData.producersDisplayData);
     const producersOptions = useSelector(state => state.entityData.producersOptions);
     const showsOptions = useSelector(state => state.entityData.showsOptions);
 
-    // ****************
-    // Load data to be displayed in producers table
-    // ****************
-    const tableTitle = 'Producers';
-    const tableHeaders = [
-        'ID',
-        'First Name',
-        'Last Name',
-        'Email Address',
-        'Phone Number',
-        'Show ID'
-    ]
-
-    // ****************
-    // Define add new producer form
-    // ****************
-    const [newProducerFirstName, setNewProducerFirstName] = useState('');
-    const [newProducerLastName, setNewProducerLastName] = useState('');
-    const [newProducerEmail, setNewProducerEmail] = useState('');
-    const [newProducerPhone, setNewProducerPhone] = useState('');
-    const [newProducerShowID, setNewProducerShowID] = useState('');
-
-    const addNewProducer = async (e) => {
-        e.preventDefault();
-        const newProducer = { newProducerFirstName, newProducerLastName, newProducerEmail, newProducerPhone, newProducerShowID };
-        console.log('new producer show ID: ', newProducer.newProducerShowID);
-        newProducer.newProducerShowID = newProducer.newProducerShowID === '' ? undefined : newProducer.newProducerShowID;
-        const respStatus = await createEntity('producers', newProducer);
-        setRespModalIsOpen(true);
-        if (respStatus === 201) {
-            setRespModalMsg(`Success! A new producer with name ${newProducerFirstName} ${newProducerLastName}, has been added to the database.`);
-            for (let fn of [setNewProducerFirstName, setNewProducerLastName, setNewProducerEmail, setNewProducerPhone, setNewProducerShowID]) {
-                fn('');
-            };
-            dispatch(loadProducers());
-        } else {
-            setRespModalMsg(`Unable to add new producer to the database. Error status: ${respStatus}. Please try again later.`);
-        };
-    };
-
-    const addNewProducerFormTitle = formConstants.REQUIRED_FIELD_INSTR;
-    const addNewProducerFormInputs = [
-        {
-            type: 'text',
-            id: 'new-producer-first-name',
-            value: newProducerFirstName,
-            placeholder: 'Producer First Name',
-            onChange: e => setNewProducerFirstName(e.target.value),
-            labelText: formConstants.REQUIRED_FIELD_INDICATOR + 'First Name: ',
-            inputIsRequired: true
-        },
-        {
-            type: 'text',
-            id: 'new-producer-last-name',
-            value: newProducerLastName,
-            placeholder: 'Producer Last Name',
-            onChange: e => setNewProducerLastName(e.target.value),
-            labelText: formConstants.REQUIRED_FIELD_INDICATOR + 'Last Name: ',
-            inputIsRequired: true
-        },
-        {
-            type: 'select',
-            id: 'new-producer-show-id',
-            value: newProducerShowID,
-            onChange: e => setNewProducerShowID(e.target.value),
-            options: [...[{}], ...showsOptions],
-            labelText: 'Show ID: ',
-            inputIsRequired: false
-        },
-        {
-            type: 'text',
-            id: 'new-producer-email',
-            value: newProducerEmail,
-            placeholder: 'Producer Email',
-            onChange: e => setNewProducerEmail(e.target.value),
-            labelText: formConstants.REQUIRED_FIELD_INDICATOR + 'Email Address: ',
-            inputIsRequired: true
-        },
-        {
-            type: 'text',
-            id: 'new-producer-phone',
-            value: newProducerPhone,
-            placeholder: 'Producer Phone #',
-            onChange: e => setNewProducerPhone(e.target.value),
-            labelText: formConstants.REQUIRED_FIELD_INDICATOR + 'Phone #: ',
-            inputIsRequired: true
-        },
-        {
-            type: 'submit',
-            id: 'add-new-producer-submit',
-            value: 'Add New Producer'
-        }
-    ]
-
-    // ****************
-    // Define update producer form
-    // ****************
     const [producerToUpdateID, setProducerToUpdateID] = useState('');
     const [producerToUpdateFirstName, setProducerToUpdateFirstName] = useState('');
     const [producerToUpdateLastName, setProducerToUpdateLastName] = useState('');
@@ -154,7 +47,7 @@ export default function Producers () {
                 setProducerToUpdateLastName(producer.last_name);
                 setProducerToUpdateEmail(producer.email_address);
                 setProducerToUpdatePhone(producer.phone_number);
-                setProducerToUpdateShowID(producer.show_ID);
+                setProducerToUpdateShowID(producer.show_ID !== null ? producer.show_ID : '');
             };
         }
     }
@@ -241,44 +134,12 @@ export default function Producers () {
         }
     ]
 
-    // console.log('producer select input options: ', updateProducerFormInputs[0].options);
-
     const [respModalIsOpen, setRespModalIsOpen] = useState(false);
     const [respModalMsg, setRespModalMsg] = useState('');
 
-    const deleteProducer = getDeleteEntityFn(
-        'Producers', 
-        dispatch,
-        loadProducers, 
-        setRespModalIsOpen, 
-        setRespModalMsg
-    );
-
-    // useEffect(() => {
-    //     loadProducers()
-    // },
-    // []);
-    
-    // useEffect(() => {
-    //     loadShowsOptions()
-    // },
-    // []);    
-
     return (
         <div>
-            <Table tableTitle={ tableTitle } tableHeaders={ tableHeaders } data={ producersDisplaydata } onDelete={ deleteProducer } setEntityFn={ loadProducers }/>
-            <Accordion
-                title={'Add New Producer'}
-                content={
-                    <Form title={ addNewProducerFormTitle } inputs={ addNewProducerFormInputs } onSubmit={ addNewProducer }/>
-                }
-            />
-            <Accordion
-                title={'Update Producer'}
-                content={
-                    <Form title={ updateProducerFormTitle } inputs={ updateProducerFormInputs } onSubmit={ updateProducer }/>
-                }
-            />
+            <Form title={ updateProducerFormTitle } inputs={ updateProducerFormInputs } onSubmit={ updateProducer }/>
             <RespModal modalIsOpen={ respModalIsOpen } setModalIsOpenFn={ setRespModalIsOpen } modalMsg={ respModalMsg }></RespModal>
         </div>
     )

@@ -1,43 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import Form from '../../Form';
-import Table from '../../Table';
-import { createEntity, getDeleteEntityFn } from '../../../utils/entityData';
-import * as formConstants from '../../../constants/form_strings';
-import RespModal from '../../Modal';
-import Accordion from '../../Accordion';
-import { loadStreams, loadAllEntityData } from '../../../store/actions/entitiesActions';
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { createEntity } from "../../../../utils/entityData";
+import { loadStreams } from "../../../../store/actions/entitiesActions";
+import * as formConstants from '../../../../constants/form_strings';
+import Form from "../../../Form";
+import RespModal from "../../../Modal";
 
 
-export default function Streams () {
-    console.log('Rendering Streams component...')
+export default function AddStreamForm () {
 
     const dispatch = useDispatch();
 
-    const initialDataLoaded = useSelector(state => state.entityData.initialDataLoaded);
-    if (!initialDataLoaded) {
-        dispatch(loadAllEntityData());
-    };
-
-    const streamsData = useSelector(state => state.entityData.streamsData);
-    const streamsDisplayData = useSelector(state => state.entityData.streamsDisplayData);
-    const episodesOptions = useSelector(state => state.entityData.episodesOptions);
     const subscribersOptions = useSelector(state => state.entityData.subscribersOptions);
+    const episodesOptions = useSelector(state => state.entityData.episodesOptions);
 
-    // ****************
-    // Load data to be displayed in shows table
-    // ****************
-    const tableTitle = 'Streams';
-    const tableHeaders = [
-        'ID',
-        'Subscriber',
-        'Episode',
-        'Time Streamed'
-    ]
-
-    // ****************
-    // Define add new stream form
-    // ****************
     const [newStreamSubscriberID, setNewStreamSubscriberID] = useState('');
     const [newStreamEpisodeID, setNewStreamEpisodeID] = useState('');
     const [newStreamTimeStreamed, setNewStreamTimeStreamed] = useState('');
@@ -97,38 +73,9 @@ export default function Streams () {
     const [respModalIsOpen, setRespModalIsOpen] = useState(false);
     const [respModalMsg, setRespModalMsg] = useState('');
 
-    const deleteStream = getDeleteEntityFn(
-        'Streams', 
-        dispatch,
-        loadStreams, 
-        setRespModalIsOpen, 
-        setRespModalMsg
-    );
-
-    // useEffect(() => {
-    //     loadStreams()
-    // },
-    // []);
-
-    // useEffect(() => {
-    //     loadSubscribersOptions()
-    // },
-    // []);    
-
-    // useEffect(() => {
-    //     loadEpisodesOptions()
-    // },
-    // []); 
-
     return (
         <div>
-            <Table tableTitle={ tableTitle } tableHeaders={ tableHeaders } data={ streamsDisplayData } onDelete={ deleteStream } setEntityFn={ loadStreams }/>
-            <Accordion
-                title={'Add New Stream'}
-                content={
-                    <Form title={ addNewStreamFormTitle } inputs={ addNewStreamFormInputs } onSubmit={ addNewStream }/>
-                }
-            />
+            <Form title={ addNewStreamFormTitle } inputs={ addNewStreamFormInputs } onSubmit={ addNewStream }/>
             <RespModal modalIsOpen={ respModalIsOpen } setModalIsOpenFn={ setRespModalIsOpen } modalMsg={ respModalMsg }></RespModal>
         </div>
     )

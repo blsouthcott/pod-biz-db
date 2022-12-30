@@ -103,7 +103,7 @@ export const entitiesReducer = (state = initialState, action) => {
             let producersOptions = []
             for (let cnt=0; cnt<producers.length; cnt++) {
                 let { producer_ID, show_ID, first_name, last_name, email_address, phone_number } = producers[cnt];
-                show_ID = `(${show_ID}) ${showsObj[show_ID].title}`
+                show_ID = show_ID !== null ? `(${show_ID}) ${showsObj[show_ID].title}` : '';
                 producersArrays.push([producer_ID, first_name, last_name, email_address, phone_number, show_ID]);
                 producersOptions.push(
                     {

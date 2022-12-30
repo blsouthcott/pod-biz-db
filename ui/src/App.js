@@ -6,11 +6,11 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Navigation from './components/Navigation';
 import HomePage from './components/pages/Home/HomePage';
 import Episodes from './components/pages/Episodes/EpisodesPage';
-import Hosts from './components/pages/Hosts/Hosts';
-import Producers from './components/pages/Producers/Producers';
-import Shows from './components/pages/Shows/Shows';
-import Streams from './components/pages/Streams/Streams';
-import Subscribers from './components/pages/Subscribers/Subscribers';
+import Hosts from './components/pages/Hosts/HostsPage';
+import Producers from './components/pages/Producers/ProducersPage';
+import Shows from './components/pages/Shows/ShowsPage';
+import Streams from './components/pages/Streams/StreamsPage';
+import Subscribers from './components/pages/Subscribers/SubscribersPage';
 
 
 function App() {

@@ -34,7 +34,7 @@ export default function SearchEpisodesForm ({ setDisplaySearched, setLocalEpisod
         ] = await Promise.all([
             fetch(url),
             getEntityData('shows')
-        ])
+        ]);
         const episodesData = await searchResp.json();
         const showsObj = dataToObj(showsData, 'show_ID');
         setLocalEpisodesDisplayData(episodesToArrays(episodesData, showsObj));
