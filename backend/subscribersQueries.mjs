@@ -35,18 +35,21 @@ export function selectAllSearch ({firstName = undefined, lastName = undefined} =
 };
 
 
-
-//-----------------------------------------------------------------------------------------------------------------
-//add new subscriber to subscribers table
 export const addNewSubscriber = () => {
-    return `INSERT INTO Subscribers(first_name, last_name, email_address, phone_number, age, gender) 
+    return `INSERT INTO Subscribers(
+        first_name,
+        last_name,
+        email_address,
+        phone_number,
+        age,
+        gender
+    ) 
     VALUES (?, ?, ?, ?, ?, ?);`
 };
 
-//add new subscriber to subscriber/show inter table
+
 export const addNewInterSubscribersShows = () => {
-    return `INSERT INTO Inter_subscribers_shows(subscriber_ID, show_ID)
-    VALUES (?, ?);`
+    return `INSERT INTO Inter_subscribers_shows(subscriber_ID, show_ID) VALUES (?, ?);`
 };
 
 export const deleteInterSubscribersShows = () => {
@@ -54,7 +57,6 @@ export const deleteInterSubscribersShows = () => {
 }
 
 
-//update subscriber table
 export const updateSubscriber = () => {  
     return `
         UPDATE Subscribers 

@@ -86,18 +86,23 @@ input[type=submit]:hover, .reset-table:hover {
 
 .table-scrollable {
     overflow-y: auto;
-    height: 500px;
+    max-height: 500px;
+    width: 75%;
+    margin: auto;
+    border-bottom: 1px solid rgba(220,220,220,0.5);
 }
 
 .table-scrollable thead tr {
     position: sticky;
-    top: 0px;
+    top: -1px;
 }
 
 table {
-    margin: auto;
+    /* margin: auto; */
     border-collapse: collapse;
-    width: 75%;
+    /* width: 75%; */
+    width: 100%;
+    /* border: 1px solid black; */
 }
 
 td, th {  

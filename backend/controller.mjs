@@ -1,5 +1,4 @@
-
-import express, { json } from 'express';
+import express from 'express';
 import * as dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import cors from 'cors';
@@ -45,13 +44,14 @@ function combineShowIDs(results, id) {
     return resultsData;
 };
 
+
 function formatDates(results) {
     for (let i=0; i<results.length; i++) {
         results[i].date_released = new Date(results[i].date_released).toLocaleDateString();
         results[i].time_streamed = `${new Date(results[i].time_streamed).toLocaleDateString()} ${new Date(results[i].time_streamed).toLocaleTimeString()}`;
     }
     return results;
-}
+};
 
 
 // ***********************
@@ -413,12 +413,16 @@ app.get('/streams', (req, res) => {
     });
 });
 
+
 app.post('/streams', (req, res) => {
-    // Define our queries
-    const addStream = streamsQueries.addNewStream(req.body.newStreamSubscriberID, req.body.newStreamEpisodeID, req.body.newStreamTimeStreamed)
-    //Insert new stream into streams table
+    const addStream = streamsQueries.addNewStream();
+    const inputs = [
+        parseInt(req.body.newStreamSubscriberID),
+        parseInt(req.body.newStreamEpisodeID),
+        req.body.newStreamTimeStreamed
+    ]
     console.log(addStream)
-    db.query(addStream, (err, results, fields) => {
+    db.query(addStream, inputs, (err, results, fields) => {
         if (err) {
             res.status(500).send(JSON.stringify(err))
         }
@@ -427,8 +431,8 @@ app.post('/streams', (req, res) => {
 });
 
 app.delete('/streams/:id', (req, res) => {
-    const deleteAStream = streamsQueries.deleteStream(req.params.id);
-    db.query(deleteAStream, (err, results, fields) => {
+    const deleteAStream = streamsQueries.deleteStream();
+    db.query(deleteAStream, [parseInt(req.params.id)], (err, results, fields) => {
         if (err) {
             res.status(500).send(JSON.stringify(err));
         }
@@ -439,7 +443,6 @@ app.delete('/streams/:id', (req, res) => {
 // ***********************
 // Subscribers routes
 // ***********************
-
 app.get('/subscribers', (req, res) => {
     let subscribersQuery;
     let inputs;
@@ -464,7 +467,6 @@ app.get('/subscribers', (req, res) => {
 });
 
 
-//add new subscriber
 app.post('/subscribers', (req, res) => {
     console.log('request body: ', req.body);
     let inputs;
@@ -513,7 +515,6 @@ app.post('/subscribers', (req, res) => {
     });
 });
 
-// update existing subscriber in the Subscribers and subscribers/shows inter tables
 
 app.put('/subscribers', (req, res) => {
     // Define our queries

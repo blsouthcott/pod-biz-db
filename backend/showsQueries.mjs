@@ -14,7 +14,7 @@ export const addNewShow = (title) => {
             );`;
 };
 
-export const deleteShow = (id) => {
+export const deleteShow = () => {
     return `DELETE FROM Shows 
             WHERE show_ID = ?;`;
 };
