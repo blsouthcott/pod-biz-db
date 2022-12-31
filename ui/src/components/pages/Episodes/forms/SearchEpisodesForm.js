@@ -4,6 +4,7 @@ import { backendURL } from '../../../../constants/backendURL';
 import { getEntityData } from '../../../../utils/entityData';
 import { dataToObj } from '../../../../utils/displayDataUtils';
 import { episodesToArrays } from '../../../../utils/displayDataUtils';
+import RespModal from '../../../Modal';
 
 
 export default function SearchEpisodesForm ({ setDisplaySearched, setLocalEpisodesDisplayData }) {
@@ -36,9 +37,14 @@ export default function SearchEpisodesForm ({ setDisplaySearched, setLocalEpisod
             getEntityData('shows')
         ]);
         const episodesData = await searchResp.json();
-        const showsObj = dataToObj(showsData, 'show_ID');
-        setLocalEpisodesDisplayData(episodesToArrays(episodesData, showsObj));
-        setDisplaySearched();
+        if (!episodesData[0]) {
+            setRespModalMsg('Search returned 0 results');
+            setRespModalIsOpen(true);
+        } else {
+            const showsObj = dataToObj(showsData, 'show_ID');
+            setLocalEpisodesDisplayData(episodesToArrays(episodesData, showsObj));
+            setDisplaySearched();
+        };
         clearSearchForm();
         // const tableHeader = document.getElementById('table-header-row');
         // tableHeader.scrollIntoView();
@@ -71,9 +77,13 @@ export default function SearchEpisodesForm ({ setDisplaySearched, setLocalEpisod
         }
     ]
 
+    const [respModalIsOpen, setRespModalIsOpen] = useState(false);
+    const [respModalMsg, setRespModalMsg] = useState('');
+
     return (
         <div>
             <Form title={ searchEpisodeFormTitle } inputs={ searchEpisodeFormInputs } onSubmit={ searchForEpisode }/>
+            <RespModal modalIsOpen={ respModalIsOpen } setModalIsOpenFn={ setRespModalIsOpen } modalMsg={ respModalMsg }></RespModal>      
         </div>
     )
 }
