@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadAllEntityData, loadShows } from '../../../store/actions/entitiesActions';
 import { getDeleteEntityFn } from '../../../utils/entityData';
@@ -12,9 +12,9 @@ export default function ShowsTable () {
     const dispatch = useDispatch();
     
     const initialDataLoaded = useSelector(state => state.entityData.initialDataLoaded);
-    if (!initialDataLoaded) {
-        dispatch(loadAllEntityData());
-    };
+    // if (!initialDataLoaded) {
+    //     dispatch(loadAllEntityData());
+    // };
 
     const showsDisplayData = useSelector(state => state.entityData.showsDisplayData);
 
@@ -28,6 +28,14 @@ export default function ShowsTable () {
     const [respModalMsg, setRespModalMsg] = useState('');
 
     const deleteShow = getDeleteEntityFn('Shows', dispatch, loadShows, setRespModalIsOpen, setRespModalMsg);
+
+    useEffect(() => {
+        console.log('Running useEffect on Shows Table...')
+        console.log('initialDataLoaded: ', initialDataLoaded)
+        if (!initialDataLoaded) {
+            dispatch(loadAllEntityData());
+        }
+    }, [])
 
     return (
         <div>

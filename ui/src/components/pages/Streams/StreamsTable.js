@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loadAllEntityData, loadStreams } from "../../../store/actions/entitiesActions";
 import { getDeleteEntityFn } from "../../../utils/entityData";
@@ -12,9 +12,9 @@ export default function StreamsTable () {
     const dispatch = useDispatch();
 
     const initialDataLoaded = useSelector(state => state.entityData.initialDataLoaded);
-    if (!initialDataLoaded) {
-        dispatch(loadAllEntityData());
-    };
+    // if (!initialDataLoaded) {
+    //     dispatch(loadAllEntityData());
+    // };
 
     const streamsDisplayData = useSelector(state => state.entityData.streamsDisplayData);
 
@@ -36,6 +36,14 @@ export default function StreamsTable () {
         setRespModalIsOpen, 
         setRespModalMsg
     );
+
+    useEffect(() => {
+        console.log('Running useEffect on Streams Table...')
+        console.log('initialDataLoaded: ', initialDataLoaded)
+        if (!initialDataLoaded) {
+            dispatch(loadAllEntityData());
+        }
+    }, [])
 
     return (
         <div>

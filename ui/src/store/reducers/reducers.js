@@ -63,7 +63,7 @@ export const entitiesReducer = (state = initialState, action) => {
             console.log('calling LOAD_HOSTS action...')
             const hosts = payload.hostsData;
             showsObj = dataToObj(payload.showsData, 'show_ID');
-            console.log('showsObj: ', showsObj)
+            // console.log('showsObj: ', showsObj)
             // for (let show of payload.showsData) {
             //     showsObj[show.show_ID] = show;
             // }

@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loadAllEntityData} from "../../../store/actions/entitiesActions";
+import { loadAllEntityData } from "../../../store/actions/entitiesActions";
 import Table from "../../Table";
 import { loadEpisodes } from "../../../store/actions/entitiesActions";
 import { getDeleteEntityFn } from "../../../utils/entityData";
@@ -13,9 +13,9 @@ export default function EpisodesTable ({ displaySearched, setDisplaySearched, lo
     const dispatch = useDispatch();
 
     const initialDataLoaded = useSelector(state => state.entityData.initialDataLoaded);
-    if (!initialDataLoaded) {
-        dispatch(loadAllEntityData());
-    };
+    // if (!initialDataLoaded) {
+    //     dispatch(loadAllEntityData());
+    // };
 
     const allEpisodesDisplayData = useSelector(state => state.entityData.episodesDisplayData);
 
@@ -39,6 +39,14 @@ export default function EpisodesTable ({ displaySearched, setDisplaySearched, lo
         setRespModalIsOpen, 
         setRespModalMsg
     );
+
+    useEffect(() => {
+        console.log('Running useEffect on Episodes Table...')
+        console.log('initialDataLoaded: ', initialDataLoaded)
+        if (!initialDataLoaded) {
+            dispatch(loadAllEntityData());
+        }
+    }, [])
 
     return (
         <div>

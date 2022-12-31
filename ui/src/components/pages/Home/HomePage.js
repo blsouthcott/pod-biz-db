@@ -4,7 +4,18 @@ import { useDispatch, useSelector } from 'react-redux';
 
 export default function HomePage () {
     const dispatch = useDispatch();
-    dispatch(loadAllEntityData());
+    // dispatch(loadAllEntityData());
+
+    const initialDataLoaded = useSelector(state => state.entityData.initialDataLoaded);
+
+    useEffect(() => {
+        console.log('Running useEffect on Home Page...')
+        console.log('initialDataLoaded: ', initialDataLoaded)
+        if (!initialDataLoaded) {
+            dispatch(loadAllEntityData());
+        }
+    }, []);
+
     return (
         <div>
             <div className='overview'>

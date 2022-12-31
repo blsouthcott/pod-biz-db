@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loadAllEntityData, loadSubscribers } from "../../../store/actions/entitiesActions";
 import { getDeleteEntityFn } from "../../../utils/entityData";
@@ -12,9 +12,9 @@ export default function SubscribersTable ({ displaySearched, setDisplaySearched,
     const dispatch = useDispatch();
 
     const initialDataLoaded = useSelector(state => state.entityData.initialDataLoaded);
-    if (!initialDataLoaded) {
-        dispatch(loadAllEntityData());
-    };
+    // if (!initialDataLoaded) {
+    //     dispatch(loadAllEntityData());
+    // };
 
     const allSubscribersDisplayData = useSelector(state => state.entityData.subscribersDisplayData);
 
@@ -40,6 +40,14 @@ export default function SubscribersTable ({ displaySearched, setDisplaySearched,
         setRespModalIsOpen, 
         setRespModalMsg
     );
+
+    useEffect(() => {
+        console.log('Running useEffect on Subscribers Table...')
+        console.log('initialDataLoaded: ', initialDataLoaded)
+        if (!initialDataLoaded) {
+            dispatch(loadAllEntityData());
+        }
+    }, [])
 
     return (
         <div>

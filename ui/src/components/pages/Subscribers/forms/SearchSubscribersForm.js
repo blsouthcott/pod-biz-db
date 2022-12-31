@@ -4,6 +4,7 @@ import { getEntityData } from "../../../../utils/entityData";
 import { backendURL } from "../../../../constants/backendURL";
 import { subscribersToArrays } from "../../../../utils/displayDataUtils";
 import Form from "../../../Form";
+import RespModal from "../../../Modal";
 
 
 export default function SearchSubscribersForm ({ setDisplaySearched, setLocalSubscribersDisplayData}) {
@@ -36,9 +37,15 @@ export default function SearchSubscribersForm ({ setDisplaySearched, setLocalSub
             getEntityData('shows')
         ]);
         const subscribersData = await searchResp.json();
-        const showsObj = dataToObj(showsData, 'show_ID');
-        setLocalSubscribersDisplayData(subscribersToArrays(subscribersData, showsObj));
-        setDisplaySearched();
+        // if no subscribers are found, the request returns `[null]`
+        if (!subscribersData[0]) {
+            setRespModalMsg('Search returned 0 results');
+            setRespModalIsOpen(true);
+        } else {
+            const showsObj = dataToObj(showsData, 'show_ID');
+            setLocalSubscribersDisplayData(subscribersToArrays(subscribersData, showsObj));
+            setDisplaySearched();
+        };
         clearSearchForm();
     };
 
@@ -67,9 +74,13 @@ export default function SearchSubscribersForm ({ setDisplaySearched, setLocalSub
         }
     ]
 
+    const [respModalIsOpen, setRespModalIsOpen] = useState(false);
+    const [respModalMsg, setRespModalMsg] = useState('');
+
     return (
         <div>
             <Form title={ searchSubscriberFormTitle } inputs={ searchSubscriberFormInputs } onSubmit={ searchForSubscriber }/>
+            <RespModal modalIsOpen={ respModalIsOpen } setModalIsOpenFn={ setRespModalIsOpen } modalMsg={ respModalMsg }></RespModal>      
         </div>
     )
 }

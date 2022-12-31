@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { loadAllEntityData } from '../../../store/actions/entitiesActions';
@@ -14,13 +14,11 @@ export default function HostsTable () {
     const dispatch = useDispatch();
 
     const initialDataLoaded = useSelector(state => state.entityData.initialDataLoaded);
-    if (!initialDataLoaded) {
-        dispatch(loadAllEntityData());
-    };
+    // if (!initialDataLoaded) {
+    //     dispatch(loadAllEntityData());
+    // };
 
     const hostsDisplayData = useSelector(state => state.entityData.hostsDisplayData);
-
-    const allHostsDisplayData = useSelector(state => state.entityData.hostsDisplayData);
 
     const tableTitle = 'Hosts';
     const tableHeaders = [
@@ -42,6 +40,14 @@ export default function HostsTable () {
         setRespModalIsOpen, 
         setRespModalMsg
     );
+
+    useEffect(() => {
+        console.log('Running useEffect on Hosts Table...')
+        console.log('initialDataLoaded: ', initialDataLoaded)
+        if (!initialDataLoaded) {
+            dispatch(loadAllEntityData());
+        }
+    }, [])
 
     return (
         <div>
