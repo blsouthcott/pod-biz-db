@@ -9,7 +9,7 @@ function Table({ data, tableTitle, tableHeaders, onDelete, allowDeletion=true, s
         <React.Fragment>
             <h2>{ tableTitle }</h2>
             <div className='table-scrollable'>
-                <table>
+                <table id={'table'}>
                     {/* <caption><h2>{ tableTitle }</h2></caption> */}
                     <thead>
                         <tr id='table-header-row'>

@@ -6,18 +6,22 @@ import { loadEpisodes } from '../../../../store/actions/entitiesActions';
 import RespModal from '../../../Modal';
 import Form from '../../../Form';
 import { formatDate } from '../../../../utils/formatDate';
+import { scrollToUpdatedRow } from '../../../../utils/scrollTo';
 
 
 export default function UpdateEpisodeForm () {
 
     const dispatch = useDispatch();
     const episodesData = useSelector(state => state.entityData.episodesData);
+    const episodesDisplayData = useSelector(state => state.entityData.episodesDisplayData);
     const episodesOptions = useSelector(state => state.entityData.episodesOptions);
 
     const [episodeToUpdateID, setEpisodeToUpdateID] = useState(''); 
     const [episodeToUpdateTitle, setEpisodeToUpdateTitle] = useState('');
     const [episodeToUpdateSummary, setEpisodeToUpdateSummary] = useState('');
     const [episodeToUpdateDateReleased, setEpisodeToUpdateDateReleased] = useState('');
+
+    const [updatedEpisodeID, setUpdatedEpisodeID] = useState('');
 
     const fillEpisodeToUpdateData = async (e) => {
         // this function is set as the onBlur event for the episode_ID input
@@ -52,14 +56,16 @@ export default function UpdateEpisodeForm () {
         episodeToUpdate.episodeToUpdateSummary = episodeToUpdate.episodeToUpdateSummary === '' ? undefined : episodeToUpdate.episodeToUpdateSummary;
         const respStatus = await updateEntityData('episodes', episodeToUpdate);
         if (respStatus === 200) {
+            setUpdatedEpisodeID(episodeToUpdateID);
             setRespModalMsg(`Success! The episode with title: ${episodeToUpdateTitle}, has been updated in the database.`);
             setRespModalIsOpen(true);
             for (let fn of [setEpisodeToUpdateID, setEpisodeToUpdateTitle, setEpisodeToUpdateSummary, setEpisodeToUpdateDateReleased]) {
                 fn('');
             }
             dispatch(loadEpisodes());
-            // scrollToUpdatedRow(allEpisodesDisplayData, episodeToUpdateID, document);
+            // scrollToUpdatedRow(episodesDisplayData, episodeToUpdateID, document);
         } else {
+            setUpdatedEpisodeID('');
             setRespModalMsg(`Unable to update episode in the database. Error status ${respStatus} Please try again later.`);
             setRespModalIsOpen(true);
         };
@@ -117,7 +123,14 @@ export default function UpdateEpisodeForm () {
     return (
         <div>
             <Form title={ updateEpisodeFormTitle } inputs={ updateEpisodeFormInputs } onSubmit={ updateEpisode }/>
-            <RespModal modalIsOpen={ respModalIsOpen } setModalIsOpenFn={ setRespModalIsOpen } modalMsg={ respModalMsg }></RespModal>
+            <RespModal 
+            modalIsOpen={ respModalIsOpen } 
+            setModalIsOpenFn={ setRespModalIsOpen } 
+            modalMsg={ respModalMsg }
+            respType={ 'update' }
+            rowID={ updatedEpisodeID }
+            entityDisplayData={ episodesDisplayData }
+            />
         </div>
     )
 }

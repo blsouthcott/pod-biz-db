@@ -6,13 +6,20 @@ export const scrollToNewRow = (data, document) => {
 };
 
 
+export const scrollToTableBottom = () => {
+    const table = document.getElementsByClassName('table-scrollable')[0];
+    table.scrollTop += table.scrollHeight;
+    table.scrollIntoView();
+}
+
+
 export const scrollToTopOfTable = (document) => {
     const tableHeader = document.getElementById('table-header-row');
     tableHeader.scrollIntoView();
 }
 
 
-export const scrollToUpdatedRow = (displayData, updatedRowID, document) => {
+export const scrollToUpdatedRow = (displayData, updatedRowID) => {
     console.log('updated row ID: ', updatedRowID)
     console.log('length of display data: ', displayData.length)
     let updatedRowNum;
@@ -25,4 +32,5 @@ export const scrollToUpdatedRow = (displayData, updatedRowID, document) => {
     };
     const updatedRow = document.getElementById(`table-row-${updatedRowNum}`);
     updatedRow.scrollIntoView();
+    return updatedRow;
 }

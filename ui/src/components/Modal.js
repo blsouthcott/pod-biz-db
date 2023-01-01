@@ -1,7 +1,9 @@
 // this code is derived from: https://dev.to/bhuma08/react-using-modal-in-functional-components-3po2
 
-import React from 'react';
+import React, { useState } from 'react';
 import Modal from 'react-modal';
+import { useSelector } from 'react-redux';
+import { scrollToTableBottom, scrollToUpdatedRow } from '../utils/scrollTo';
 
 
 const customStyles = {
@@ -19,12 +21,40 @@ const customStyles = {
 };
 
 
-export default function RespModal ({ modalIsOpen, setModalIsOpenFn, modalMsg }) {
+export default function RespModal ({ modalIsOpen, setModalIsOpenFn, modalMsg, respType, rowID, entityDisplayData }) {
+
+    const [lengthEntityData, setLengthEntityData] = useState(entityDisplayData?.length)
+
+    let closeFn;
+    switch(respType) {
+        case 'create':
+            closeFn = () => {
+                scrollToTableBottom();
+                const numRows = entityDisplayData.length;
+                if (numRows > lengthEntityData) {
+                    const newRow = document.getElementById(`table-row-${numRows-1}`);
+                    newRow.id = 'new-table-row';
+                    setLengthEntityData(numRows);
+                };
+            };
+            break;
+        case 'update':
+            closeFn = () => {
+                if (rowID) {
+                    const updatedRow = scrollToUpdatedRow(entityDisplayData, rowID);
+                    updatedRow.id = 'new-table-row';
+                };
+            };
+            break;
+    };
+
 
     return (
         <div className='resp-modal'>
             <Modal
               isOpen={ modalIsOpen } 
+              preventScroll={ true }
+              onAfterClose={ closeFn }
               appElement={ document.getElementById('root') }
               style={ customStyles } >
                 <p>{ modalMsg }</p>

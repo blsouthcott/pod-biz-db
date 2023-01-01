@@ -13,10 +13,6 @@ export default function EpisodesTable ({ displaySearched, setDisplaySearched, lo
     const dispatch = useDispatch();
 
     const initialDataLoaded = useSelector(state => state.entityData.initialDataLoaded);
-    // if (!initialDataLoaded) {
-    //     dispatch(loadAllEntityData());
-    // };
-
     const allEpisodesDisplayData = useSelector(state => state.entityData.episodesDisplayData);
 
     const tableTitle = 'Episodes';

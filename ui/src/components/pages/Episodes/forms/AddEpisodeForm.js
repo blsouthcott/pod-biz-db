@@ -5,12 +5,14 @@ import * as formConstants from '../../../../constants/form_strings';
 import { loadEpisodes } from '../../../../store/actions/entitiesActions';
 import RespModal from '../../../Modal';
 import Form from '../../../Form';
+import { scrollToTableBottom } from '../../../../utils/scrollTo';
 
 
 export default function AddEpisodeForm () {
 
     const dispatch = useDispatch();
     const showsOptions = useSelector(state => state.entityData.showsOptions);
+    const episodesDisplayData = useSelector(state => state.entityData.episodesDisplayData);
 
     const [newEpisodeShowID, setNewEpisodeShowID] = useState('');
     const [newEpisodeTitle, setNewEpisodeTitle] = useState('');
@@ -23,13 +25,13 @@ export default function AddEpisodeForm () {
         newEpisode.newEpisodeSummary = newEpisode.newEpisodeSummary === '' ? undefined : newEpisode.newEpisodeSummary;
         const respStatus = await createEntity('episodes', newEpisode);
         if (respStatus === 201) {
+            dispatch(loadEpisodes());
             setRespModalMsg(`Success! A new episode for show: ${newEpisodeShowID}, with title: ${newEpisodeTitle}, has been added to the database.`);
             setRespModalIsOpen(true);
             for (let fn of [setNewEpisodeShowID, setNewEpisodeTitle, setNewEpisodeSummary, setNewEpisodeDateReleased]) {
                 fn('');
             };
-            dispatch(loadEpisodes());
-            // scrollToNewRow(episodesData, document);
+            // scrollToTableBottom();
         } else if (respStatus === 400) {
             setRespModalMsg(`No hosts are assigned to show ${newEpisodeShowID}. Please navigate to the Hosts page and update a currently existing Host or add a new Host.`);
             setRespModalIsOpen(true);
@@ -90,7 +92,13 @@ export default function AddEpisodeForm () {
     return (
         <div>
             <Form title={ formTitle } inputs={ addNewEpisodeFormInputs } onSubmit={ addNewEpisode }></Form>
-            <RespModal modalIsOpen={ respModalIsOpen } setModalIsOpenFn={ setRespModalIsOpen } modalMsg={ respModalMsg }></RespModal>
+            <RespModal 
+            modalIsOpen={ respModalIsOpen } 
+            setModalIsOpenFn={ setRespModalIsOpen } 
+            modalMsg={ respModalMsg } 
+            respType={ 'create' }
+            entityDisplayData={ episodesDisplayData }
+            />
         </div>
     )
 }

@@ -116,6 +116,15 @@ th {
     background: gainsboro;
 }
 
+#new-table-row {
+    animation-name: new-row;
+    animation-duration: 8s;
+}
+
+@keyframes new-row {
+    from {background-color: #FFFF88;}
+    to {background-color: white;}
+}
 
 .accordion-item {
     text-align: left;
