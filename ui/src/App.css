@@ -118,7 +118,7 @@ th {
 
 #new-table-row {
     animation-name: new-row;
-    animation-duration: 8s;
+    animation-duration: 5s;
 }
 
 @keyframes new-row {
@@ -153,4 +153,9 @@ footer {
     padding-top: 20px;
     padding-bottom: 20px;
     font-style: italic;
+}
+
+.delete-icon:hover {
+    cursor: pointer;
+    color: lightcoral;
 }

@@ -1,6 +1,6 @@
 // this code is derived from: https://dev.to/bhuma08/react-using-modal-in-functional-components-3po2
 
-import React, { useState } from 'react';
+import React from 'react';
 import Modal from 'react-modal';
 import { useSelector } from 'react-redux';
 import { scrollToTableBottom, scrollToUpdatedRow } from '../utils/scrollTo';
@@ -21,26 +21,31 @@ const customStyles = {
 };
 
 
-export default function RespModal ({ modalIsOpen, setModalIsOpenFn, modalMsg, respType, rowID, entityDisplayData }) {
-
-    const [lengthEntityData, setLengthEntityData] = useState(entityDisplayData?.length)
+export default function RespModal ({ 
+    modalIsOpen, 
+    setModalIsOpenFn, 
+    modalMsg, 
+    isSuccessResp, 
+    respType,
+    rowID, 
+    entityDisplayData 
+}) {
 
     let closeFn;
     switch(respType) {
         case 'create':
             closeFn = () => {
                 scrollToTableBottom();
-                const numRows = entityDisplayData.length;
-                if (numRows > lengthEntityData) {
+                if (isSuccessResp) {
+                    const numRows = entityDisplayData.length;
                     const newRow = document.getElementById(`table-row-${numRows-1}`);
                     newRow.id = 'new-table-row';
-                    setLengthEntityData(numRows);
                 };
             };
             break;
         case 'update':
             closeFn = () => {
-                if (rowID) {
+                if (isSuccessResp) {
                     const updatedRow = scrollToUpdatedRow(entityDisplayData, rowID);
                     updatedRow.id = 'new-table-row';
                 };

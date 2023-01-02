@@ -15,6 +15,7 @@ export default function UpdateSubscriberForm () {
     const dispatch = useDispatch();
 
     const subscribersData = useSelector(state => state.entityData.subscribersData);
+    const subscribersDisplayData = useSelector(state => state.entityData.subscribersDisplayData);
     const subscribersOptions = useSelector(state => state.entityData.subscribersOptions);
     const showsOptions = useSelector(state => state.entityData.showsOptions);
 
@@ -26,6 +27,8 @@ export default function UpdateSubscriberForm () {
     const [subscriberToUpdateAge, setSubscriberToUpdateAge] = useState('');
     const [subscriberToUpdateGender, setSubscriberToUpdateGender] = useState('');
     const [subscriberToUpdateSubscribedShowIDs, setSubscriberToUpdateSubscribedShowIDs] = useState([]);
+
+    const [updatedSubscriberID, setUpdatedSubscriberID] = useState('');
 
     const fillSubscriberToUpdateData = (e) => {
         // this function autofills the data in the update form based on the user input
@@ -69,9 +72,10 @@ export default function UpdateSubscriberForm () {
         subscriberToUpdate.subscriberToUpdateAge = subscriberToUpdate.subscriberToUpdateAge === '' ? undefined : subscriberToUpdate.subscriberToUpdateAge;
         subscriberToUpdate.subscriberToUpdateGender = subscriberToUpdate.subscriberToUpdateGender === '' ? undefined : subscriberToUpdate.subscriberToUpdateGender;
         const respStatus = await updateEntityData('subscribers', subscriberToUpdate);
-        setRespModalIsOpen(true);
         if (respStatus === 200) {
+            setUpdatedSubscriberID(subscriberToUpdateID);
             setRespModalMsg(`Success! Subscriber with ID: ${subscriberToUpdate.subscriberToUpdateID} has been updated in the database.`)
+            setIsSuccessResp(true);
             for (let fn of [setSubscriberToUpdateID, setSubscriberToUpdateFirstName, setSubscriberToUpdateLastName, setSubscriberToUpdateEmail, setSubscriberToUpdatePhone, setSubscriberToUpdateAge, setSubscriberToUpdateGender]) {
                 fn('');
             };
@@ -79,7 +83,9 @@ export default function UpdateSubscriberForm () {
             dispatch(loadSubscribers());
         } else {
             setRespModalMsg(`Unable to update subscriber in the database. Error status: ${respStatus} Please try again later.`);
+            setIsSuccessResp(false);
         };
+        setRespModalIsOpen(true);
     }
 
     const updateSubscriberFormTitle = formConstants.REQUIRED_FIELD_INSTR;
@@ -167,11 +173,20 @@ export default function UpdateSubscriberForm () {
 
     const [respModalIsOpen, setRespModalIsOpen] = useState(false);
     const [respModalMsg, setRespModalMsg] = useState('');
+    const [isSuccessResp, setIsSuccessResp] = useState();
 
     return (
         <div>
             <Form title={ updateSubscriberFormTitle } inputs={ updateSubscriberFormInputs } onSubmit={ updateSubscriber }/>
-            <RespModal modalIsOpen={ respModalIsOpen } setModalIsOpenFn={ setRespModalIsOpen } modalMsg={ respModalMsg }></RespModal>      
+            <RespModal 
+            modalIsOpen={ respModalIsOpen } 
+            setModalIsOpenFn={ setRespModalIsOpen } 
+            modalMsg={ respModalMsg }
+            isSuccessResp={ isSuccessResp }
+            resptype={ 'update' }
+            rowID={ updatedSubscriberID }
+            entityDisplayData={ subscribersDisplayData }
+            />
         </div>
     )
 }

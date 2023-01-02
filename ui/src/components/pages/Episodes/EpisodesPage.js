@@ -15,7 +15,7 @@ export default function Episodes () {
     return (
         <div>
             <EpisodesTable displaySearched={displaySearched} setDisplaySearched={setDisplaySearched} localEpisodesDisplayData={localEpisodesDisplayData}/>
-            <Accordion 
+            <Accordion
                 title={'Search Episode'}
                 content={<SearchEpisodesForm setDisplaySearched={ setDisplaySearched } setLocalEpisodesDisplayData={ setLocalEpisodesDisplayData }/>}
             />

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { ConfirmModal } from './Modal';
+// import { MdDeleteForever } from 'react-icons/md';
+import { RiDeleteBin2Line } from 'react-icons/ri';
 
 
 function TableRow ({ data, rowNum, onDelete, allowDeletion=true }) {
@@ -11,10 +13,11 @@ function TableRow ({ data, rowNum, onDelete, allowDeletion=true }) {
                 {data.map((d, i) => <td key={i}>{d}</td>)}
                 {allowDeletion === true && 
                     <td>
-                        <button 
+                        <RiDeleteBin2Line
+                            className='delete-icon'
+                            size='24'
                             onClick={ () => { setRowID(data[0]); setConfirmModalIsOpen(true); }} 
-                            >Delete
-                        </button>
+                            />
                         <ConfirmModal 
                         modalIsOpen={ confirmModalIsOpen } 
                         setModalIsOpenFn={ setConfirmModalIsOpen }

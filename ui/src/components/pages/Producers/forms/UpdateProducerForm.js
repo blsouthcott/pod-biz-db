@@ -12,6 +12,7 @@ export default function UpdateProducerForm () {
     const dispatch = useDispatch();
 
     const producersData = useSelector(state => state.entityData.producersData);
+    const producersDisplayData = useSelector(state => state.entityData.producersDisplayData);
     const producersOptions = useSelector(state => state.entityData.producersOptions);
     const showsOptions = useSelector(state => state.entityData.showsOptions);
 
@@ -21,6 +22,8 @@ export default function UpdateProducerForm () {
     const [producerToUpdateEmail, setProducerToUpdateEmail] = useState('');
     const [producerToUpdatePhone, setProducerToUpdatePhone] = useState('');
     const [producerToUpdateShowID, setProducerToUpdateShowID] = useState([]);
+
+    const [updatedProducerID, setUpdatedProducerID] = useState('');
 
     const fillProducerToUpdateData = (e) => {
         // once we get the backend up and running, search for episodes data
@@ -57,8 +60,8 @@ export default function UpdateProducerForm () {
         const producerToUpdate = { producerToUpdateID, producerToUpdateFirstName, producerToUpdateLastName, producerToUpdateEmail, producerToUpdatePhone, producerToUpdateShowID };
         producerToUpdate.producerToUpdateShowID = producerToUpdate.producerToUpdateShowID === '' ? undefined : producerToUpdate.producerToUpdateShowID;
         const respStatus = await updateEntityData('producers', producerToUpdate);
-        setRespModalIsOpen(true);
         if (respStatus === 200) {
+            setUpdatedProducerID(producerToUpdateID);
             setRespModalMsg(`Success! Producer with id: ${producerToUpdateID} has been updated in the database.`);
             for (let fn of [setProducerToUpdateID, setProducerToUpdateFirstName, setProducerToUpdateLastName, setProducerToUpdateEmail, setProducerToUpdatePhone, setProducerToUpdateShowID]) {
                 fn('');
@@ -67,6 +70,7 @@ export default function UpdateProducerForm () {
         } else {
             setRespModalMsg(`Unable to update producer in the database. Error status: ${respStatus}. Please try again later`);
         };
+        setRespModalIsOpen(true);
     }
 
     const updateProducerFormTitle = formConstants.REQUIRED_FIELD_INSTR;
@@ -136,11 +140,20 @@ export default function UpdateProducerForm () {
 
     const [respModalIsOpen, setRespModalIsOpen] = useState(false);
     const [respModalMsg, setRespModalMsg] = useState('');
+    const [isSuccessResp, setIsSuccessResp] = useState();
 
     return (
         <div>
             <Form title={ updateProducerFormTitle } inputs={ updateProducerFormInputs } onSubmit={ updateProducer }/>
-            <RespModal modalIsOpen={ respModalIsOpen } setModalIsOpenFn={ setRespModalIsOpen } modalMsg={ respModalMsg }></RespModal>
+            <RespModal 
+            modalIsOpen={ respModalIsOpen } 
+            setModalIsOpenFn={ setRespModalIsOpen } 
+            modalMsg={ respModalMsg }
+            isSuccessResp={ isSuccessResp }
+            respType={ 'update' }
+            rowID={ updatedProducerID }
+            entityDisplayData={ producersDisplayData }
+            />
         </div>
     )
 }

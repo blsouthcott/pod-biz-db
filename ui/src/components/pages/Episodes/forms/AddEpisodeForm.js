@@ -5,7 +5,6 @@ import * as formConstants from '../../../../constants/form_strings';
 import { loadEpisodes } from '../../../../store/actions/entitiesActions';
 import RespModal from '../../../Modal';
 import Form from '../../../Form';
-import { scrollToTableBottom } from '../../../../utils/scrollTo';
 
 
 export default function AddEpisodeForm () {
@@ -27,18 +26,19 @@ export default function AddEpisodeForm () {
         if (respStatus === 201) {
             dispatch(loadEpisodes());
             setRespModalMsg(`Success! A new episode for show: ${newEpisodeShowID}, with title: ${newEpisodeTitle}, has been added to the database.`);
-            setRespModalIsOpen(true);
+            setIsSuccessResp(true);
             for (let fn of [setNewEpisodeShowID, setNewEpisodeTitle, setNewEpisodeSummary, setNewEpisodeDateReleased]) {
                 fn('');
             };
             // scrollToTableBottom();
         } else if (respStatus === 400) {
             setRespModalMsg(`No hosts are assigned to show ${newEpisodeShowID}. Please navigate to the Hosts page and update a currently existing Host or add a new Host.`);
-            setRespModalIsOpen(true);
+            setIsSuccessResp(false);
         } else {
             setRespModalMsg(`Unable to add new episode to the database. Error status: ${respStatus} Please try again later.`);
-            setRespModalIsOpen(true);
+            setIsSuccessResp(false);
         }
+        setRespModalIsOpen(true);
     };
 
     const formTitle = formConstants.REQUIRED_FIELD_INSTR;
@@ -88,14 +88,16 @@ export default function AddEpisodeForm () {
 
     const [respModalIsOpen, setRespModalIsOpen] = useState(false);
     const [respModalMsg, setRespModalMsg] = useState('');
+    const [isSuccessResp, setIsSuccessResp] = useState();
 
     return (
         <div>
             <Form title={ formTitle } inputs={ addNewEpisodeFormInputs } onSubmit={ addNewEpisode }></Form>
-            <RespModal 
+            <RespModal
             modalIsOpen={ respModalIsOpen } 
             setModalIsOpenFn={ setRespModalIsOpen } 
-            modalMsg={ respModalMsg } 
+            modalMsg={ respModalMsg }
+            isSuccessResp={ isSuccessResp }
             respType={ 'create' }
             entityDisplayData={ episodesDisplayData }
             />

@@ -13,6 +13,7 @@ export default function AddHostForm () {
     const dispatch = useDispatch();
 
     const showsOptions = useSelector(state => state.entityData.showsOptions);
+    const hostsDisplayData = useSelector(state => state.entityData.hostsDisplayData);
 
     const [newHostFirstName, setNewHostFirstName] = useState('');
     const [newHostLastName, setNewHostLastName] = useState('');
@@ -28,6 +29,7 @@ export default function AddHostForm () {
         const respStatus = await createEntity('hosts', newHost);
         if (respStatus === 201) {
             setRespModalMsg(`Success! A new Host with name: ${newHostFirstName} ${newHostLastName} has been added to the database.`);
+            setIsSuccessResp(true);
             setRespModalIsOpen(true);
             for (let fn of [setNewHostFirstName, setNewHostLastName, setNewHostEmail, setNewHostPhone, setNewHostShowIDs]) {
                 fn('');
@@ -35,6 +37,7 @@ export default function AddHostForm () {
             dispatch(loadHosts());
         } else {
             setRespModalMsg(`Unable to add new host to the database. Error status ${respStatus}Please try again later.`);
+            setIsSuccessResp(false);
             setRespModalIsOpen(true);
         };
     };
@@ -96,11 +99,19 @@ export default function AddHostForm () {
 
     const [respModalIsOpen, setRespModalIsOpen] = useState(false);
     const [respModalMsg, setRespModalMsg] = useState('');
+    const [isSuccessResp, setIsSuccessResp] = useState();
 
     return (
         <div>
             <Form title={ addNewHostsFormTitle } inputs={ addNewHostsFormInputs } onSubmit={ addNewHost }/>
-            <RespModal modalIsOpen={ respModalIsOpen } setModalIsOpenFn={ setRespModalIsOpen } modalMsg={ respModalMsg }></RespModal>
+            <RespModal 
+            modalIsOpen={ respModalIsOpen } 
+            setModalIsOpenFn={ setRespModalIsOpen } 
+            modalMsg={ respModalMsg }
+            isSuccessResp={ isSuccessResp }
+            respType={ 'create' }
+            entityDisplayData={ hostsDisplayData }
+            />
         </div>
     )
 }

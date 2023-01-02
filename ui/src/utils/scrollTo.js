@@ -20,16 +20,19 @@ export const scrollToTopOfTable = (document) => {
 
 
 export const scrollToUpdatedRow = (displayData, updatedRowID) => {
-    console.log('updated row ID: ', updatedRowID)
-    console.log('length of display data: ', displayData.length)
+    // console.log('updated row ID: ', updatedRowID)
+    // console.log('length of display data: ', displayData.length)
     let updatedRowNum;
     let cnt = 0;
     while (updatedRowNum === undefined) {
+        // console.log('row number: ', cnt)
+        // console.log('row ID: ', displayData[cnt][0])
         if (displayData[cnt][0] == updatedRowID) {
             updatedRowNum = cnt;
         };
         cnt++;
     };
+    // console.log('after loop, updated row number is: ', updatedRowNum)
     const updatedRow = document.getElementById(`table-row-${updatedRowNum}`);
     updatedRow.scrollIntoView();
     return updatedRow;

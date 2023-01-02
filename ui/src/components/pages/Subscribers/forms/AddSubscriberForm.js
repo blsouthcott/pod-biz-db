@@ -14,6 +14,7 @@ export default function AddSubscriberForm () {
     const dispatch = useDispatch();
 
     const showsOptions = useSelector(state => state.entityData.showsOptions);
+    const subscribersDisplayData = useSelector(state => state.entityData.subscribersDisplayData);
 
     const [newSubscriberFirstName, setNewSubscriberFirstName] = useState('');
     const [newSubscriberLastName, setNewSubscriberLastName] = useState('');
@@ -30,17 +31,19 @@ export default function AddSubscriberForm () {
         newSubscriber.newSubscriberAge = newSubscriber.newSubscriberAge === '' ? undefined : newSubscriber.newSubscriberAge;
         newSubscriber.newSubscriberGender = newSubscriber.newSubscriberGender === '' ? undefined: newSubscriber.newSubscriberGender;
         const respStatus = await createEntity('subscribers', newSubscriber);
-        setRespModalIsOpen(true);
         if (respStatus === 201) {
+            dispatch(loadSubscribers());
             setRespModalMsg(`a new Subscriber with name: ${newSubscriber.newSubscriberFirstName} ${newSubscriber.newSubscriberLastName} has been aded to the database!`);
+            setIsSuccessResp(true);
             for (let fn of [setNewSubscriberFirstName, setNewSubscriberLastName, setNewSubscriberEmail, setNewSubscriberPhone, setNewSubscriberAge, setNewSubscriberGender]) {
                 fn('');
             };
             setNewSubscriberShowIDs([]);
-            dispatch(loadSubscribers());
         } else {
             setRespModalMsg(`Unable to add new subscribers to database. Error status ${respStatus} Please try again later.`);
+            setIsSuccessResp(false);
         };
+        setRespModalIsOpen(true);
     }
 
     const addNewSubscriberFormTitle = formConstants.REQUIRED_FIELD_INSTR;
@@ -118,11 +121,19 @@ export default function AddSubscriberForm () {
 
     const [respModalIsOpen, setRespModalIsOpen] = useState(false);
     const [respModalMsg, setRespModalMsg] = useState('');
+    const [isSuccessResp, setIsSuccessResp] = useState();
 
     return (
         <div>
             <Form title={ addNewSubscriberFormTitle } inputs={ addNewSubscriberFormInputs } onSubmit={ addNewSubscriber }/>
-            <RespModal modalIsOpen={ respModalIsOpen } setModalIsOpenFn={ setRespModalIsOpen } modalMsg={ respModalMsg }></RespModal>      
+            <RespModal 
+            modalIsOpen={ respModalIsOpen } 
+            setModalIsOpenFn={ setRespModalIsOpen } 
+            modalMsg={ respModalMsg }
+            isSuccessResp={ isSuccessResp }
+            respType={ 'create' }
+            entityDisplayData={ subscribersDisplayData }
+            />      
         </div>
     )
 }

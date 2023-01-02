@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useSelector } from "react";
 import { createEntity } from "../../../../utils/entityData";
 import { useDispatch } from "react-redux";
 import { loadShows } from "../../../../store/actions/entitiesActions";
@@ -10,6 +10,8 @@ import RespModal from "../../../Modal";
 export default function AddShowForm () {
 
     const dispatch = useDispatch();
+
+    const showsDisplayData = useSelector(state => state.entityData.showsDisplayData);
     
     const [newShowTitle, setNewShowTitle] = useState('');
 
@@ -19,13 +21,14 @@ export default function AddShowForm () {
         const respStatus = await createEntity('shows', newShow);
         if (respStatus === 201) {
             setRespModalMsg(`Success! A new show with title: ${newShowTitle}, has been added to the database.`);
-            setRespModalIsOpen(true);
+            setIsSuccessResp(true);
             setNewShowTitle('');
             dispatch(loadShows());
         } else {
             setRespModalMsg(`Unable to add new show to the database. Error status: ${respStatus}. Please try again later.`);
-            setRespModalIsOpen(true);
+            setIsSuccessResp(false);
         };
+        setRespModalIsOpen(true);
     };
 
     const addNewShowFormTitle = formConstants.REQUIRED_FIELD_INSTR;
@@ -48,11 +51,19 @@ export default function AddShowForm () {
 
     const [respModalIsOpen, setRespModalIsOpen] = useState(false);
     const [respModalMsg, setRespModalMsg] = useState('');
-
+    const [isSuccessResp, setIsSuccessResp] = useState();
+    
     return (
         <div>
             <Form title={ addNewShowFormTitle } inputs={ addNewShowFormInputs } onSubmit={ addNewShow }/>
-            <RespModal modalIsOpen={ respModalIsOpen } setModalIsOpenFn={ setRespModalIsOpen } modalMsg={ respModalMsg }></RespModal>
+            <RespModal 
+            modalIsOpen={ respModalIsOpen } 
+            setModalIsOpenFn={ setRespModalIsOpen }
+            modalMsg={ respModalMsg }
+            isSuccessResp={ isSuccessResp }
+            respType={ 'create' }
+            entityDisplayData={ showsDisplayData }
+            />
         </div>
     )
 }

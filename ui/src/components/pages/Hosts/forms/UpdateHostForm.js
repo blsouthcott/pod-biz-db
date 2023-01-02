@@ -14,6 +14,7 @@ export default function UpdateHostForm () {
     const dispatch = useDispatch();
 
     const hostsData = useSelector(state => state.entityData.hostsData);
+    const hostsDisplayData = useSelector(state => state.entityData.hostsDisplayData);
     const hostsOptions = useSelector(state => state.entityData.hostsOptions);
     const showsOptions = useSelector(state => state.entityData.showsOptions);
 
@@ -23,6 +24,8 @@ export default function UpdateHostForm () {
     const [hostToUpdateEmail, setHostToUpdateEmail] = useState('');
     const [hostToUpdatePhone, setHostToUpdatePhone] = useState('');
     const [hostToUpdateShowIDs, setHostToUpdateShowIDs] = useState([]);
+
+    const [updatedHostID, setUpdatedHostID] = useState('');
 
     const fillHostToUpdateData = (e) => {
         setHostToUpdateID(e.target.value);
@@ -59,6 +62,7 @@ export default function UpdateHostForm () {
         hostToUpdate.hostToUpdatePhone = hostToUpdate.hostToUpdatePhone === '' ? undefined : hostToUpdate.hostToUpdatePhone;
         const respStatus = await updateEntityData('hosts', hostToUpdate);
         if (respStatus === 200) {
+            setUpdatedHostID(hostToUpdateID);
             setRespModalMsg(`Success! Host with id: ${hostToUpdateID}, and name: ${hostToUpdateFirstName} ${hostToUpdateLastName} has been update in the database.`);
             setRespModalIsOpen(true);
             for (let fn of [setHostToUpdateID, setHostToUpdateFirstName, setHostToUpdateLastName, setHostToUpdateEmail, setHostToUpdatePhone]) {
@@ -139,11 +143,20 @@ export default function UpdateHostForm () {
 
     const [respModalIsOpen, setRespModalIsOpen] = useState(false);
     const [respModalMsg, setRespModalMsg] = useState('');
+    const [isSuccessResp, setIsSuccessResp] = useState();
 
     return (
         <div>
             <Form title={ updateHostFormTitle } inputs={ updateHostFormInputs } onSubmit={ updateHost} />
-            <RespModal modalIsOpen={ respModalIsOpen } setModalIsOpenFn={ setRespModalIsOpen } modalMsg={ respModalMsg }></RespModal>
+            <RespModal 
+            modalIsOpen={ respModalIsOpen } 
+            setModalIsOpenFn={ setRespModalIsOpen } 
+            modalMsg={ respModalMsg }
+            isSuccessResp={ isSuccessResp }
+            respType={ 'update' }
+            rowID={ updatedHostID }
+            entityDisplayData={ hostsDisplayData }
+            />
         </div>
     )
 }

@@ -13,6 +13,7 @@ export default function AddStreamForm () {
 
     const subscribersOptions = useSelector(state => state.entityData.subscribersOptions);
     const episodesOptions = useSelector(state => state.entityData.episodesOptions);
+    const streamsDisplayData = useSelector(state => state.entityData.streamsDisplayData);
 
     const [newStreamSubscriberID, setNewStreamSubscriberID] = useState('');
     const [newStreamEpisodeID, setNewStreamEpisodeID] = useState('');
@@ -22,16 +23,18 @@ export default function AddStreamForm () {
         e.preventDefault();
         const newStream = { newStreamSubscriberID, newStreamEpisodeID, newStreamTimeStreamed };
         const respStatus = await createEntity('streams', newStream);
-        setRespModalIsOpen(true);
         if (respStatus === 201) {
             setRespModalMsg(`Success! A new stream with for episode: ${newStreamEpisodeID}, has been added to the database.`);
+            setIsSuccessResp(true);
             for (let fn of [setNewStreamSubscriberID, setNewStreamTimeStreamed, setNewStreamEpisodeID]) {
                 fn('');
             }
             dispatch(loadStreams());
         } else {
             setRespModalMsg(`Unable to add new stream to the database. Error status: ${respStatus}. Please try again later.`);
+            setIsSuccessResp(false);
         };  
+        setRespModalIsOpen(true);
     };
 
     const addNewStreamFormTitle = formConstants.REQUIRED_FIELD_INSTR;
@@ -72,11 +75,19 @@ export default function AddStreamForm () {
 
     const [respModalIsOpen, setRespModalIsOpen] = useState(false);
     const [respModalMsg, setRespModalMsg] = useState('');
+    const [isSuccessResp, setIsSuccessResp] = useState();
 
     return (
         <div>
             <Form title={ addNewStreamFormTitle } inputs={ addNewStreamFormInputs } onSubmit={ addNewStream }/>
-            <RespModal modalIsOpen={ respModalIsOpen } setModalIsOpenFn={ setRespModalIsOpen } modalMsg={ respModalMsg }></RespModal>
+            <RespModal 
+            modalIsOpen={ respModalIsOpen } 
+            setModalIsOpenFn={ setRespModalIsOpen } 
+            modalMsg={ respModalMsg }
+            isSuccessResp={ isSuccessResp }
+            respType={ 'create' }
+            entityDisplayData={ streamsDisplayData }
+            />
         </div>
     )
 }

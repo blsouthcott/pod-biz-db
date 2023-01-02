@@ -15,7 +15,6 @@ export default function SearchEpisodesForm ({ setDisplaySearched, setLocalEpisod
     const clearSearchForm = () => {
         setEpisodeTitleSearchTerm('');
         setEpisodeHostNameSearchTerm('');
-        // scrollToTopOfTable(document);
     };
 
     const searchForEpisode = async (e) => {
@@ -39,15 +38,14 @@ export default function SearchEpisodesForm ({ setDisplaySearched, setLocalEpisod
         const episodesData = await searchResp.json();
         if (!episodesData[0]) {
             setRespModalMsg('Search returned 0 results');
-            setRespModalIsOpen(true);
         } else {
             const showsObj = dataToObj(showsData, 'show_ID');
             setLocalEpisodesDisplayData(episodesToArrays(episodesData, showsObj));
             setDisplaySearched();
+            setRespModalMsg('Search results are displayed in the table')
         };
+        setRespModalIsOpen(true);
         clearSearchForm();
-        // const tableHeader = document.getElementById('table-header-row');
-        // tableHeader.scrollIntoView();
     };
 
     const searchEpisodeFormTitle = '';
@@ -83,7 +81,11 @@ export default function SearchEpisodesForm ({ setDisplaySearched, setLocalEpisod
     return (
         <div>
             <Form title={ searchEpisodeFormTitle } inputs={ searchEpisodeFormInputs } onSubmit={ searchForEpisode }/>
-            <RespModal modalIsOpen={ respModalIsOpen } setModalIsOpenFn={ setRespModalIsOpen } modalMsg={ respModalMsg }></RespModal>      
+            <RespModal 
+            modalIsOpen={ respModalIsOpen } 
+            setModalIsOpenFn={ setRespModalIsOpen } 
+            modalMsg={ respModalMsg }
+            />      
         </div>
     )
 }

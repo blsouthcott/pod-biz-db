@@ -12,6 +12,7 @@ export default function AddProducerForm () {
     const dispatch = useDispatch();
 
     const showsOptions = useSelector(state => state.entityData.showsOptions);
+    const producersDisplayData = useSelector(state => state.entityData.producersDisplayData);
 
     const [newProducerFirstName, setNewProducerFirstName] = useState('');
     const [newProducerLastName, setNewProducerLastName] = useState('');
@@ -25,16 +26,18 @@ export default function AddProducerForm () {
         console.log('new producer show ID: ', newProducer.newProducerShowID);
         newProducer.newProducerShowID = newProducer.newProducerShowID === '' ? undefined : newProducer.newProducerShowID;
         const respStatus = await createEntity('producers', newProducer);
-        setRespModalIsOpen(true);
         if (respStatus === 201) {
+            dispatch(loadProducers());
             setRespModalMsg(`Success! A new producer with name ${newProducerFirstName} ${newProducerLastName}, has been added to the database.`);
+            setIsSuccessResp(true);
             for (let fn of [setNewProducerFirstName, setNewProducerLastName, setNewProducerEmail, setNewProducerPhone, setNewProducerShowID]) {
                 fn('');
             };
-            dispatch(loadProducers());
         } else {
             setRespModalMsg(`Unable to add new producer to the database. Error status: ${respStatus}. Please try again later.`);
+            setIsSuccessResp(false);
         };
+        setRespModalIsOpen(true);
     };
 
     const addNewProducerFormTitle = formConstants.REQUIRED_FIELD_INSTR;
@@ -93,11 +96,19 @@ export default function AddProducerForm () {
 
     const [respModalIsOpen, setRespModalIsOpen] = useState(false);
     const [respModalMsg, setRespModalMsg] = useState('');
+    const [isSuccessResp, setIsSuccessResp] = useState();
 
     return (
         <div>
             <Form title={ addNewProducerFormTitle } inputs={ addNewProducerFormInputs } onSubmit={ addNewProducer }/>
-            <RespModal modalIsOpen={ respModalIsOpen } setModalIsOpenFn={ setRespModalIsOpen } modalMsg={ respModalMsg }></RespModal>
+            <RespModal 
+            modalIsOpen={ respModalIsOpen } 
+            setModalIsOpenFn={ setRespModalIsOpen } 
+            modalMsg={ respModalMsg }
+            isSuccessResp={ isSuccessResp }
+            respType={ 'create' }
+            entityDisplayData={ producersDisplayData }
+            />
         </div>
     )
 }

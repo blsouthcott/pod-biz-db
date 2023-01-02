@@ -6,7 +6,6 @@ import { loadEpisodes } from '../../../../store/actions/entitiesActions';
 import RespModal from '../../../Modal';
 import Form from '../../../Form';
 import { formatDate } from '../../../../utils/formatDate';
-import { scrollToUpdatedRow } from '../../../../utils/scrollTo';
 
 
 export default function UpdateEpisodeForm () {
@@ -41,7 +40,7 @@ export default function UpdateEpisodeForm () {
             if (episode === undefined) {
                 alert(`no episode associated with ID: ${e.target.value} was found in the database!`)
             } else {
-                console.log(episode);
+                console.log('Using the following data to fill form fields: ', episode);
                 // set input field values based on episode data return by search
                 setEpisodeToUpdateTitle(episode.title);
                 setEpisodeToUpdateSummary(episode.episode_summary);
@@ -58,17 +57,17 @@ export default function UpdateEpisodeForm () {
         if (respStatus === 200) {
             setUpdatedEpisodeID(episodeToUpdateID);
             setRespModalMsg(`Success! The episode with title: ${episodeToUpdateTitle}, has been updated in the database.`);
-            setRespModalIsOpen(true);
+            setIsSuccessResp(true);
             for (let fn of [setEpisodeToUpdateID, setEpisodeToUpdateTitle, setEpisodeToUpdateSummary, setEpisodeToUpdateDateReleased]) {
                 fn('');
             }
             dispatch(loadEpisodes());
             // scrollToUpdatedRow(episodesDisplayData, episodeToUpdateID, document);
         } else {
-            setUpdatedEpisodeID('');
             setRespModalMsg(`Unable to update episode in the database. Error status ${respStatus} Please try again later.`);
-            setRespModalIsOpen(true);
+            setIsSuccessResp(false);
         };
+        setRespModalIsOpen(true);
     };
 
     const updateEpisodeFormTitle = formConstants.REQUIRED_FIELD_INSTR;
@@ -119,6 +118,7 @@ export default function UpdateEpisodeForm () {
 
     const [respModalIsOpen, setRespModalIsOpen] = useState(false);
     const [respModalMsg, setRespModalMsg] = useState('');
+    const [isSuccessResp, setIsSuccessResp] = useState();
 
     return (
         <div>
@@ -127,6 +127,7 @@ export default function UpdateEpisodeForm () {
             modalIsOpen={ respModalIsOpen } 
             setModalIsOpenFn={ setRespModalIsOpen } 
             modalMsg={ respModalMsg }
+            isSuccessResp={ isSuccessResp }
             respType={ 'update' }
             rowID={ updatedEpisodeID }
             entityDisplayData={ episodesDisplayData }

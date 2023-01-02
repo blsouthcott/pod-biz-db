@@ -14,7 +14,7 @@ import Subscribers from './components/pages/Subscribers/SubscribersPage';
 
 
 function App() {
-  document.title = 'Podcast Database';
+  document.title = 'Podcast Company Database';
   return (
     <div className="App">
         <header className="App-header">

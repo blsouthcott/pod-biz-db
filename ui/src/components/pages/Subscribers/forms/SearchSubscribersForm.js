@@ -40,13 +40,14 @@ export default function SearchSubscribersForm ({ setDisplaySearched, setLocalSub
         // if no subscribers are found, the request returns `[null]`
         if (!subscribersData[0]) {
             setRespModalMsg('Search returned 0 results');
-            setRespModalIsOpen(true);
         } else {
             const showsObj = dataToObj(showsData, 'show_ID');
             setLocalSubscribersDisplayData(subscribersToArrays(subscribersData, showsObj));
             setDisplaySearched();
+            setRespModalMsg('Search results are displayed in the table')
         };
         clearSearchForm();
+        setRespModalIsOpen(true);
     };
 
     const searchSubscriberFormTitle = '';
@@ -80,7 +81,7 @@ export default function SearchSubscribersForm ({ setDisplaySearched, setLocalSub
     return (
         <div>
             <Form title={ searchSubscriberFormTitle } inputs={ searchSubscriberFormInputs } onSubmit={ searchForSubscriber }/>
-            <RespModal modalIsOpen={ respModalIsOpen } setModalIsOpenFn={ setRespModalIsOpen } modalMsg={ respModalMsg }></RespModal>      
+            <RespModal modalIsOpen={ respModalIsOpen } setModalIsOpenFn={ setRespModalIsOpen } modalMsg={ respModalMsg }/>      
         </div>
     )
 }
