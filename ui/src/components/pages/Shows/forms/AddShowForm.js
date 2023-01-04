@@ -1,6 +1,6 @@
-import React, { useState, useSelector } from "react";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { createEntity } from "../../../../utils/entityData";
-import { useDispatch } from "react-redux";
 import { loadShows } from "../../../../store/actions/entitiesActions";
 import * as formConstants from '../../../../constants/form_strings';
 import Form from "../../../Form";
