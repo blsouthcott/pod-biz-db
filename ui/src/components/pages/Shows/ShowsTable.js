@@ -7,7 +7,7 @@ import RespModal from '../../Modal';
 
 
 export default function ShowsTable () {
-    console.log('Rendering Shows Tabe component...')
+    console.log('Rendering Shows Table component...')
 
     const dispatch = useDispatch();
     

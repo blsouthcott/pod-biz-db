@@ -7,6 +7,7 @@
 
 .link {
     text-decoration: None;
+    color: darkslategrey;
 }
 
 .link:visited {
@@ -116,12 +117,12 @@ th {
     background: gainsboro;
 }
 
-#new-table-row {
-    animation-name: new-row;
+.highlighted-table-row {
+    animation-name: highlight-row;
     animation-duration: 5s;
 }
 
-@keyframes new-row {
+@keyframes highlight-row {
     from {background-color: #FFFF88;}
     to {background-color: white;}
 }
@@ -138,7 +139,7 @@ th {
     cursor: pointer;
 }
 
-.expand-form {
+.expand-form, .header-sortable-table {
     cursor: pointer;
 }
 
