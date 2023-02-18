@@ -9,9 +9,9 @@ function Navigation () {
                     <Link className="link" to='/'>Home </Link><p className="divider">|</p>
                     <Link className="link" to='/shows'> Shows </Link><p className="divider">|</p>
                     <Link className="link" to='/hosts'> Hosts </Link><p className="divider">|</p>
-                    <Link className="link" to='/subscribers'> Subscribers </Link><p className="divider">|</p>
-                    <Link className="link" to='/episodes'> Episodes </Link><p className="divider">|</p>
                     <Link className="link" to='/producers'> Producers </Link><p className="divider">|</p>
+                    <Link className="link" to='/episodes'> Episodes </Link><p className="divider">|</p>
+                    <Link className="link" to='/subscribers'> Subscribers </Link><p className="divider">|</p>
                     <Link className="link" to='/streams'> Streams</Link>
                 </div>
             </nav>
