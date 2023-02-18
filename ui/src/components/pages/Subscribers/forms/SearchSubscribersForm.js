@@ -44,6 +44,7 @@ export default function SearchSubscribersForm ({ setDisplaySearched, setLocalSub
             const showsObj = dataToObj(showsData, 'show_ID');
             setLocalSubscribersDisplayData(subscribersToArrays(subscribersData, showsObj));
             setDisplaySearched();
+            document.getElementById('table-title').scrollIntoView();
             setRespModalMsg('Search results are displayed in the table')
         };
         clearSearchForm();

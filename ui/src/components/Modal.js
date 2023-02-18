@@ -39,7 +39,7 @@ export default function RespModal ({
                 if (isSuccessResp) {
                     const numRows = entityDisplayData.length;
                     const newRow = document.getElementById(`table-row-${numRows-1}`);
-                    newRow.id = 'new-table-row';
+                    newRow.className = 'highlighted-table-row';
                 };
             };
             break;
@@ -47,10 +47,17 @@ export default function RespModal ({
             closeFn = () => {
                 if (isSuccessResp) {
                     const updatedRow = scrollToUpdatedRow(entityDisplayData, rowID);
-                    updatedRow.id = 'new-table-row';
+                    updatedRow.classList.remove('highlighted-table-row');
+                    setTimeout(() => {
+                        updatedRow.classList.add('highlighted-table-row');
+                    }, 10);
                 };
             };
             break;
+        default:
+            closeFn = () => {
+                return;
+            }
     };
 
 

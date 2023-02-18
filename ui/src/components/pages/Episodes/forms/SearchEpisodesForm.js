@@ -42,7 +42,9 @@ export default function SearchEpisodesForm ({ setDisplaySearched, setLocalEpisod
             const showsObj = dataToObj(showsData, 'show_ID');
             setLocalEpisodesDisplayData(episodesToArrays(episodesData, showsObj));
             setDisplaySearched();
+            document.getElementById('table-title').scrollIntoView();
             setRespModalMsg('Search results are displayed in the table')
+
         };
         setRespModalIsOpen(true);
         clearSearchForm();
