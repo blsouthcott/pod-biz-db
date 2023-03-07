@@ -1,7 +1,7 @@
 # pod-biz-db
 
 ## Demo
-Here's a link to a demo of this project! https://www.loom.com/share/809149065d19417daa16e5c62e2eec8e
+Click [here](https://www.loom.com/share/809149065d19417daa16e5c62e2eec8e) to see a demo of this project!
 
 ## About
 A database driven website for a podcast network company.
